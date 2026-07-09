@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "AutoLock.WinUI (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "AutoLock.WinUI (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

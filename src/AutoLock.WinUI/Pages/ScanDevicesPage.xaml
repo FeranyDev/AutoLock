@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Page
+    x:Class="AutoLock_WinUI.Pages.ScanDevicesPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:core="using:AutoLock.Core"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid
+            MaxWidth="1120"
+            Padding="40,28,40,40"
+            HorizontalAlignment="Center"
+            RowSpacing="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <StackPanel Spacing="6">
+                <TextBlock
+                    x:Name="PageTitleText"
+                    Style="{StaticResource TitleTextBlockStyle}"
+                    Text="扫描设备" />
+                <TextBlock
+                    x:Name="PageSubtitleText"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    Text="查找附近蓝牙设备并保存绑定信息" />
+            </StackPanel>
+
+            <Border
+                Grid.Row="1"
+                Padding="24"
+                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1"
+                CornerRadius="8">
+                <Grid ColumnSpacing="20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="220" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <NumberBox
+                        x:Name="ScanSecondsBox"
+                        Minimum="1"
+                        SpinButtonPlacementMode="Inline"
+                        Value="8" />
+
+                    <PasswordBox
+                        x:Name="IrkBox"
+                        Grid.Column="1"
+                        PlaceholderText="32 位十六进制值" />
+
+                    <Button
+                        x:Name="ScanButton"
+                        Grid.Column="2"
+                        Click="ScanButton_Click"
+                        MinWidth="96"
+                        VerticalAlignment="Bottom"
+                        Style="{StaticResource AccentButtonStyle}">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon Glyph="&#xE71E;" />
+                            <TextBlock x:Name="ScanButtonText" Text="扫描" />
+                        </StackPanel>
+                    </Button>
+
+                    <Button
+                        x:Name="BindSelectedButton"
+                        Grid.Column="3"
+                        Click="BindSelectedButton_Click"
+                        MinWidth="132"
+                        VerticalAlignment="Bottom">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon Glyph="&#xE73E;" />
+                            <TextBlock x:Name="BindSelectedButtonText" Text="绑定选中设备" />
+                        </StackPanel>
+                    </Button>
+                </Grid>
+            </Border>
+
+            <InfoBar
+                x:Name="StatusInfoBar"
+                Grid.Row="2"
+                IsClosable="False"
+                IsOpen="True"
+                Message="可以开始扫描附近设备。"
+                Severity="Informational"
+                Title="就绪" />
+
+            <Border
+                Grid.Row="3"
+                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1"
+                CornerRadius="8">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <Grid Padding="20,18" ColumnSpacing="12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock
+                            x:Name="DevicesSectionText"
+                            FontSize="18"
+                            FontWeight="SemiBold"
+                            Text="附近设备" />
+                        <TextBlock
+                            x:Name="BleText"
+                            Grid.Column="1"
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            Text="BLE" />
+                    </Grid>
+
+                    <ListView
+                        x:Name="DevicesList"
+                        Grid.Row="1"
+                        MinHeight="360"
+                        SelectionMode="Single">
+                        <ListView.Header>
+                            <Grid Padding="16,10" ColumnSpacing="16">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="90" />
+                                    <ColumnDefinition Width="90" />
+                                    <ColumnDefinition Width="120" />
+                                    <ColumnDefinition Width="120" />
+                                    <ColumnDefinition Width="140" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock x:Name="AddressColumnText" FontWeight="SemiBold" Text="地址" />
+                                <TextBlock x:Name="RssiColumnText" Grid.Column="1" FontWeight="SemiBold" Text="信号" />
+                                <TextBlock x:Name="SeenColumnText" Grid.Column="2" FontWeight="SemiBold" Text="次数" />
+                                <TextBlock x:Name="AppleDataColumnText" Grid.Column="3" FontWeight="SemiBold" Text="厂商数据" />
+                                <TextBlock x:Name="IrkMatchColumnText" Grid.Column="4" FontWeight="SemiBold" Text="IRK 匹配" />
+                                <TextBlock x:Name="LastSeenColumnText" Grid.Column="5" FontWeight="SemiBold" Text="最后出现" />
+                            </Grid>
+                        </ListView.Header>
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="core:DeviceSighting">
+                                <Grid Padding="16,10" ColumnSpacing="16">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="90" />
+                                        <ColumnDefinition Width="90" />
+                                        <ColumnDefinition Width="120" />
+                                        <ColumnDefinition Width="120" />
+                                        <ColumnDefinition Width="140" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{x:Bind DisplayAddress}" />
+                                    <TextBlock Grid.Column="1" Text="{x:Bind Rssi}" />
+                                    <TextBlock Grid.Column="2" Text="{x:Bind SeenCount}" />
+                                    <CheckBox
+                                        Grid.Column="3"
+                                        HorizontalAlignment="Left"
+                                        IsChecked="{x:Bind HasAppleManufacturerData, Mode=OneWay}"
+                                        IsHitTestVisible="False" />
+                                    <CheckBox
+                                        Grid.Column="4"
+                                        HorizontalAlignment="Left"
+                                        IsChecked="{x:Bind ResolvesWithIrk, Mode=OneWay}"
+                                        IsHitTestVisible="False" />
+                                    <TextBlock Grid.Column="5" Text="{x:Bind LastSeenLocal, Mode=OneWay}" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+            </Border>
+        </Grid>
+    </ScrollViewer>
+</Page>

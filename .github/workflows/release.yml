@@ -1,0 +1,61 @@
+name: Release Package
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Release version, for example 1.0.0
+        required: true
+        default: 1.0.0
+      runtime:
+        description: Windows runtime identifier
+        required: true
+        default: win-x64
+        type: choice
+        options:
+          - win-x64
+          - win-x86
+          - win-arm64
+      mode:
+        description: Package mode
+        required: true
+        default: Folder
+        type: choice
+        options:
+          - Folder
+          - Msix
+          - All
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+jobs:
+  package:
+    name: Package ${{ inputs.runtime }}
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Publish package
+        shell: pwsh
+        run: >
+          ./scripts/publish.ps1
+          -Mode "${{ inputs.mode }}"
+          -RuntimeIdentifier "${{ inputs.runtime }}"
+          -Version "${{ inputs.version }}"
+          -Clean
+
+      - name: Upload release artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: AutoLock-${{ inputs.version }}-${{ inputs.runtime }}
+          path: artifacts/release/
+          if-no-files-found: error

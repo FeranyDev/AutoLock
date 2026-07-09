@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Page
+    x:Class="AutoLock_WinUI.Pages.AboutPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid
+        MaxWidth="920"
+        Padding="40,28,40,40"
+        HorizontalAlignment="Center"
+        RowSpacing="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Spacing="6">
+            <TextBlock
+                x:Name="PageTitleText"
+                Style="{StaticResource TitleTextBlockStyle}"
+                Text="关于" />
+            <TextBlock
+                x:Name="PageSubtitleText"
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                Text="版本、数据路径和诊断信息。" />
+        </StackPanel>
+
+        <Border
+            Grid.Row="1"
+            Padding="24"
+            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+            BorderThickness="1"
+            CornerRadius="8">
+            <StackPanel Spacing="4">
+                <Grid Padding="0,12" ColumnSpacing="24">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="220" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock x:Name="VersionTitleText" FontWeight="SemiBold" Text="版本" />
+                    <TextBlock x:Name="VersionValueText" Grid.Column="1" TextWrapping="WrapWholeWords" />
+                </Grid>
+                <Rectangle Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" />
+
+                <Grid Padding="0,12" ColumnSpacing="24">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="220" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock x:Name="DataDirTitleText" FontWeight="SemiBold" Text="数据目录" />
+                    <TextBlock x:Name="DataDirValueText" Grid.Column="1" TextWrapping="WrapWholeWords" />
+                </Grid>
+                <Rectangle Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" />
+
+                <Grid Padding="0,12" ColumnSpacing="24">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="220" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock x:Name="BindingPathTitleText" FontWeight="SemiBold" Text="绑定配置" />
+                    <TextBlock x:Name="BindingPathValueText" Grid.Column="1" TextWrapping="WrapWholeWords" />
+                </Grid>
+                <Rectangle Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" />
+
+                <Grid Padding="0,12" ColumnSpacing="24">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="220" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock x:Name="SettingsPathTitleText" FontWeight="SemiBold" Text="应用设置" />
+                    <TextBlock x:Name="SettingsPathValueText" Grid.Column="1" TextWrapping="WrapWholeWords" />
+                </Grid>
+                <Rectangle Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" />
+
+                <Grid Padding="0,12" ColumnSpacing="24">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="220" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock x:Name="HistoryPathTitleText" FontWeight="SemiBold" Text="历史记录" />
+                    <TextBlock x:Name="HistoryPathValueText" Grid.Column="1" TextWrapping="WrapWholeWords" />
+                </Grid>
+                <Rectangle Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" />
+
+                <Grid Padding="0,12" ColumnSpacing="24">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="220" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock x:Name="CrashLogTitleText" FontWeight="SemiBold" Text="崩溃日志" />
+                    <TextBlock x:Name="CrashLogValueText" Grid.Column="1" TextWrapping="WrapWholeWords" />
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <StackPanel
+            Grid.Row="2"
+            Orientation="Horizontal"
+            Spacing="12">
+            <Button
+                x:Name="OpenDataDirButton"
+                Click="OpenDataDirButton_Click">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <FontIcon Glyph="&#xE8DA;" />
+                    <TextBlock x:Name="OpenDataDirButtonText" Text="打开数据目录" />
+                </StackPanel>
+            </Button>
+        </StackPanel>
+    </Grid>
+</Page>

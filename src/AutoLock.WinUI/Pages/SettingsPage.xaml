@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Page
+    x:Class="AutoLock_WinUI.Pages.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:AutoLock_WinUI.Pages"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid
+            MaxWidth="920"
+            Padding="40,28,40,40"
+            HorizontalAlignment="Center"
+            RowSpacing="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Spacing="6">
+            <TextBlock
+                x:Name="PageTitleText"
+                Style="{StaticResource TitleTextBlockStyle}"
+                Text="设置" />
+            <TextBlock
+                x:Name="PageSubtitleText"
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                Text="启动、后台运行和语言" />
+        </StackPanel>
+
+        <Border
+            Grid.Row="1"
+            Padding="24"
+            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+            BorderThickness="1"
+            CornerRadius="8">
+            <StackPanel Spacing="4">
+                <Grid Padding="0,14" ColumnSpacing="24">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Spacing="4">
+                        <TextBlock
+                            x:Name="StartupTitleText"
+                            FontWeight="SemiBold"
+                            Text="开机自启" />
+                        <TextBlock
+                            x:Name="StartupHelpText"
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            Text="登录 Windows 后自动启动 AutoLock。" />
+                    </StackPanel>
+                    <ToggleSwitch
+                        x:Name="StartupSwitch"
+                        Grid.Column="1"
+                        Toggled="StartupSwitch_Toggled" />
+                </Grid>
+
+                <Rectangle Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" />
+
+                <Grid Padding="0,14" ColumnSpacing="24">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="280" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Spacing="4">
+                        <TextBlock
+                            x:Name="TrustedWifiTitleText"
+                            FontWeight="SemiBold"
+                            Text="受信任 Wi-Fi" />
+                        <TextBlock
+                            x:Name="TrustedWifiHelpText"
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            Text="连接到该 Wi-Fi 时跳过自动锁定。留空表示关闭。" />
+                    </StackPanel>
+                    <StackPanel
+                        Grid.Column="1"
+                        Spacing="8">
+                        <TextBox
+                            x:Name="TrustedWifiBox"
+                            AcceptsReturn="True"
+                            MinHeight="88"
+                            TextWrapping="Wrap"
+                            TextChanged="TrustedWifiBox_TextChanged" />
+                        <Button
+                            x:Name="UseCurrentWifiButton"
+                            Click="UseCurrentWifiButton_Click"
+                            HorizontalAlignment="Stretch">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xEC3F;" />
+                                <TextBlock x:Name="UseCurrentWifiButtonText" Text="使用当前 Wi-Fi" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+
+                <Rectangle Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" />
+
+                <Grid Padding="0,14" ColumnSpacing="24">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Spacing="4">
+                        <TextBlock
+                            x:Name="ExternalPowerTitleText"
+                            FontWeight="SemiBold"
+                            Text="接入电源时不锁" />
+                        <TextBlock
+                            x:Name="ExternalPowerHelpText"
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            Text="设备接入电源时，即使蓝牙设备离开也不会锁定。" />
+                    </StackPanel>
+                    <ToggleSwitch
+                        x:Name="ExternalPowerSwitch"
+                        Grid.Column="1"
+                        Toggled="ExternalPowerSwitch_Toggled" />
+                </Grid>
+
+                <Rectangle Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" />
+
+                <Grid Padding="0,14" ColumnSpacing="24">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Spacing="4">
+                        <TextBlock
+                            x:Name="BackgroundTitleText"
+                            FontWeight="SemiBold"
+                            Text="后台运行" />
+                        <TextBlock
+                            x:Name="BackgroundHelpText"
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            Text="关闭窗口时最小化到通知区域。" />
+                    </StackPanel>
+                    <ToggleSwitch
+                        x:Name="BackgroundSwitch"
+                        Grid.Column="1"
+                        Toggled="BackgroundSwitch_Toggled" />
+                </Grid>
+
+                <Rectangle Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" />
+
+                <Grid Padding="0,14" ColumnSpacing="24">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="220" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Spacing="4">
+                        <TextBlock
+                            x:Name="LanguageTitleText"
+                            FontWeight="SemiBold"
+                            Text="语言" />
+                        <TextBlock
+                            x:Name="LanguageHelpText"
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            Text="切换界面显示语言。" />
+                    </StackPanel>
+                    <ComboBox
+                        x:Name="LanguageBox"
+                        Grid.Column="1"
+                        SelectionChanged="LanguageBox_SelectionChanged">
+                        <ComboBoxItem x:Name="LanguageChineseItem" Content="简体中文" Tag="zh-CN" />
+                        <ComboBoxItem x:Name="LanguageEnglishItem" Content="English" Tag="en-US" />
+                    </ComboBox>
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <InfoBar
+            x:Name="StatusInfoBar"
+            Grid.Row="2"
+            IsClosable="False"
+            IsOpen="True"
+            Message="设置已加载。"
+            Severity="Informational"
+            Title="就绪" />
+        </Grid>
+    </ScrollViewer>
+</Page>
