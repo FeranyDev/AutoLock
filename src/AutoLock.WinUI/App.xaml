@@ -10,6 +10,7 @@
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
                 <!-- Other merged dictionaries here -->
             </ResourceDictionary.MergedDictionaries>
+            <x:Double x:Key="ContentDialogMaxWidth">860</x:Double>
             <!-- Other app resources here -->
         </ResourceDictionary>
     </Application.Resources>

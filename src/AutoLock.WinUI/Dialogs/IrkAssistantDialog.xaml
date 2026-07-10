@@ -3,9 +3,9 @@
     x:Class="AutoLock_WinUI.Dialogs.IrkAssistantDialog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    MinWidth="680">
+    MinWidth="760">
 
-    <Grid Width="680" RowSpacing="16">
+    <Grid Width="760" RowSpacing="16">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -16,13 +16,51 @@
             IsAddTabButtonVisible="False"
             TabWidthMode="Equal">
             <TabViewItem x:Name="WindowsTab" IsClosable="False">
-                <ScrollViewer MaxHeight="430" VerticalScrollBarVisibility="Auto">
+                <ScrollViewer MaxHeight="470" VerticalScrollBarVisibility="Auto">
                     <StackPanel Padding="4,12,4,16" Spacing="14">
-                        <InfoBar
-                            x:Name="WindowsGuideInfo"
-                            IsClosable="False"
-                            IsOpen="True"
-                            Severity="Informational" />
+                        <Border
+                            Padding="16"
+                            Background="{ThemeResource SystemFillColorAttentionBackgroundBrush}"
+                            CornerRadius="8">
+                            <Grid ColumnSpacing="12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <FontIcon
+                                    Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                                    Glyph="&#xE946;"
+                                    FontSize="16" />
+                                <StackPanel Grid.Column="1" Spacing="6">
+                                    <TextBlock
+                                        x:Name="WindowsGuideTitleText"
+                                        FontWeight="SemiBold"
+                                        IsTextSelectionEnabled="True" />
+                                    <TextBlock
+                                        x:Name="WindowsGuideText"
+                                        IsTextSelectionEnabled="True"
+                                        TextWrapping="Wrap" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+
+                        <Grid ColumnSpacing="12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBox
+                                x:Name="SystemCommandBox"
+                                Header="SYSTEM 命令"
+                                IsReadOnly="True"
+                                Text="psexec -s -i regedit" />
+                            <TextBox
+                                x:Name="RegistryPathBox"
+                                Grid.Column="1"
+                                Header="注册表路径"
+                                IsReadOnly="True"
+                                Text="HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\BTHPORT\Parameters\Keys" />
+                        </Grid>
 
                         <TextBox
                             x:Name="BluetoothAddressBox"
@@ -39,19 +77,44 @@
                         <InfoBar
                             x:Name="WindowsResultInfo"
                             IsClosable="False"
-                            IsOpen="False" />
+                            IsOpen="False">
+                            <TextBlock
+                                x:Name="WindowsResultText"
+                                IsTextSelectionEnabled="True"
+                                TextWrapping="Wrap" />
+                        </InfoBar>
                     </StackPanel>
                 </ScrollViewer>
             </TabViewItem>
 
             <TabViewItem x:Name="MacTab" IsClosable="False">
-                <ScrollViewer MaxHeight="430" VerticalScrollBarVisibility="Auto">
+                <ScrollViewer MaxHeight="470" VerticalScrollBarVisibility="Auto">
                     <StackPanel Padding="4,12,4,16" Spacing="14">
-                        <InfoBar
-                            x:Name="MacGuideInfo"
-                            IsClosable="False"
-                            IsOpen="True"
-                            Severity="Informational" />
+                        <Border
+                            Padding="16"
+                            Background="{ThemeResource SystemFillColorAttentionBackgroundBrush}"
+                            CornerRadius="8">
+                            <Grid ColumnSpacing="12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <FontIcon
+                                    Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                                    Glyph="&#xE946;"
+                                    FontSize="16" />
+                                <StackPanel Grid.Column="1" Spacing="6">
+                                    <TextBlock
+                                        x:Name="MacGuideTitleText"
+                                        FontWeight="SemiBold"
+                                        IsTextSelectionEnabled="True" />
+                                    <TextBlock
+                                        x:Name="MacGuideText"
+                                        IsTextSelectionEnabled="True"
+                                        TextWrapping="Wrap" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
 
                         <TextBox
                             x:Name="KeychainContentBox"
@@ -71,7 +134,12 @@
                         <InfoBar
                             x:Name="MacResultInfo"
                             IsClosable="False"
-                            IsOpen="False" />
+                            IsOpen="False">
+                            <TextBlock
+                                x:Name="MacResultText"
+                                IsTextSelectionEnabled="True"
+                                TextWrapping="Wrap" />
+                        </InfoBar>
                     </StackPanel>
                 </ScrollViewer>
             </TabViewItem>
@@ -93,6 +161,7 @@
                 <TextBlock
                     x:Name="PrivacyText"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    IsTextSelectionEnabled="True"
                     Text="内容仅在本机解析，不会上传或保存。"
                     TextWrapping="Wrap" />
             </StackPanel>

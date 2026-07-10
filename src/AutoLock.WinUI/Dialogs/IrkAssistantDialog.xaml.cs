@@ -30,7 +30,7 @@ public sealed partial class IrkAssistantDialog : ContentDialog
 
         if (MainWindow.ActiveWindow is null)
         {
-            SetResultInfo(WindowsResultInfo, App.State.T("IrkAssistantWindowUnavailable"), InfoBarSeverity.Error);
+            SetResultInfo(WindowsResultInfo, WindowsResultText, App.State.T("IrkAssistantWindowUnavailable"), InfoBarSeverity.Error);
             return;
         }
 
@@ -44,7 +44,7 @@ public sealed partial class IrkAssistantDialog : ContentDialog
         var properties = await file.GetBasicPropertiesAsync();
         if (properties.Size > MaximumRegistryExportBytes)
         {
-            SetResultInfo(WindowsResultInfo, App.State.T("IrkAssistantFileTooLarge"), InfoBarSeverity.Warning);
+            SetResultInfo(WindowsResultInfo, WindowsResultText, App.State.T("IrkAssistantFileTooLarge"), InfoBarSeverity.Warning);
             return;
         }
 
@@ -55,7 +55,7 @@ public sealed partial class IrkAssistantDialog : ContentDialog
             var records = IrkImportHelper.FindRegistryRecords(content, targetAddress);
             if (records.Count == 0)
             {
-                SetResultInfo(WindowsResultInfo, App.State.T("IrkAssistantNoRegistryMatch"), InfoBarSeverity.Warning);
+                SetResultInfo(WindowsResultInfo, WindowsResultText, App.State.T("IrkAssistantNoRegistryMatch"), InfoBarSeverity.Warning);
                 return;
             }
 
@@ -64,17 +64,18 @@ public sealed partial class IrkAssistantDialog : ContentDialog
                 .ToArray();
             if (distinctIrks.Length > 1)
             {
-                SetResultInfo(WindowsResultInfo, App.State.T("IrkAssistantMultipleRegistryMatches"), InfoBarSeverity.Warning);
+                SetResultInfo(WindowsResultInfo, WindowsResultText, App.State.T("IrkAssistantMultipleRegistryMatches"), InfoBarSeverity.Warning);
                 return;
             }
 
             SetIrk(distinctIrks[0]);
-            SetResultInfo(WindowsResultInfo, App.State.T("IrkAssistantRegistrySuccess"), InfoBarSeverity.Success);
+            SetResultInfo(WindowsResultInfo, WindowsResultText, App.State.T("IrkAssistantRegistrySuccess"), InfoBarSeverity.Success);
         }
         catch (Exception exception)
         {
             SetResultInfo(
                 WindowsResultInfo,
+                WindowsResultText,
                 App.State.F("IrkAssistantReadFailed", exception.Message),
                 InfoBarSeverity.Error);
         }
@@ -84,12 +85,12 @@ public sealed partial class IrkAssistantDialog : ContentDialog
     {
         if (!IrkImportHelper.TryExtractKeychainIrk(KeychainContentBox.Text, out var irk))
         {
-            SetResultInfo(MacResultInfo, App.State.T("IrkAssistantKeychainInvalid"), InfoBarSeverity.Warning);
+            SetResultInfo(MacResultInfo, MacResultText, App.State.T("IrkAssistantKeychainInvalid"), InfoBarSeverity.Warning);
             return;
         }
 
         SetIrk(irk);
-        SetResultInfo(MacResultInfo, App.State.T("IrkAssistantKeychainSuccess"), InfoBarSeverity.Success);
+        SetResultInfo(MacResultInfo, MacResultText, App.State.T("IrkAssistantKeychainSuccess"), InfoBarSeverity.Success);
     }
 
     private void SetIrk(string irk)
@@ -99,9 +100,13 @@ public sealed partial class IrkAssistantDialog : ContentDialog
         IsPrimaryButtonEnabled = IrkHelper.IsValidOrEmpty(ResultIrk) && !string.IsNullOrWhiteSpace(ResultIrk);
     }
 
-    private static void SetResultInfo(InfoBar infoBar, string message, InfoBarSeverity severity)
+    private static void SetResultInfo(
+        InfoBar infoBar,
+        TextBlock messageText,
+        string message,
+        InfoBarSeverity severity)
     {
-        infoBar.Message = message;
+        messageText.Text = message;
         infoBar.Severity = severity;
         infoBar.IsOpen = true;
     }
@@ -113,12 +118,14 @@ public sealed partial class IrkAssistantDialog : ContentDialog
         CloseButtonText = App.State.T("ButtonCancel");
         WindowsTab.Header = App.State.T("IrkAssistantWindowsTab");
         MacTab.Header = App.State.T("IrkAssistantMacTab");
-        WindowsGuideInfo.Title = App.State.T("IrkAssistantWindowsTitle");
-        WindowsGuideInfo.Message = App.State.T("IrkAssistantWindowsGuide");
+        WindowsGuideTitleText.Text = App.State.T("IrkAssistantWindowsTitle");
+        WindowsGuideText.Text = App.State.T("IrkAssistantWindowsGuide");
+        SystemCommandBox.Header = App.State.T("IrkAssistantSystemCommandLabel");
+        RegistryPathBox.Header = App.State.T("IrkAssistantRegistryPathLabel");
         BluetoothAddressBox.Header = App.State.T("IrkAssistantAddressLabel");
         ImportRegistryButtonText.Text = App.State.T("IrkAssistantImportRegistry");
-        MacGuideInfo.Title = App.State.T("IrkAssistantMacTitle");
-        MacGuideInfo.Message = App.State.T("IrkAssistantMacGuide");
+        MacGuideTitleText.Text = App.State.T("IrkAssistantMacTitle");
+        MacGuideText.Text = App.State.T("IrkAssistantMacGuide");
         KeychainContentBox.Header = App.State.T("IrkAssistantKeychainLabel");
         KeychainContentBox.PlaceholderText = App.State.T("IrkAssistantKeychainPlaceholder");
         DecodeKeychainButtonText.Text = App.State.T("IrkAssistantDecodeKeychain");
