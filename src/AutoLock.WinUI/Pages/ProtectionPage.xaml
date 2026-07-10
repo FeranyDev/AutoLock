@@ -111,7 +111,7 @@
                             HorizontalAlignment="Stretch"
                             Style="{StaticResource AccentButtonStyle}">
                             <StackPanel Orientation="Horizontal" Spacing="8">
-                                <FontIcon Glyph="&#xE768;" />
+                                <FontIcon x:Name="StartStopButtonIcon" Glyph="&#xE768;" />
                                 <TextBlock x:Name="StartStopButtonText" Text="开始监控" />
                             </StackPanel>
                         </Button>

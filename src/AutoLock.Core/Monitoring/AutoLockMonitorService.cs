@@ -15,6 +15,7 @@ public sealed class AutoLockMonitorService : IDisposable
     private DateTimeOffset? _pauseUntilUtc;
 
     public event EventHandler<DeviceSightingEventArgs>? ScanDeviceSeen;
+    public event EventHandler<MonitoringStateChangedEventArgs>? MonitoringStateChanged;
     public event EventHandler<MonitorDeviceSeenEventArgs>? MonitorDeviceSeen;
     public event EventHandler<WeakSignalEventArgs>? WeakSignalIgnored;
     public event EventHandler<MissingSignalEventArgs>? MissingSignalChanged;
@@ -178,6 +179,8 @@ public sealed class AutoLockMonitorService : IDisposable
             _monitorTimer?.Dispose();
             _monitorTimer = new Timer(EvaluateMissingSignal, null, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1));
         }
+
+        MonitoringStateChanged?.Invoke(this, new MonitoringStateChangedEventArgs(true));
     }
 
     public void StopMonitor()
@@ -188,6 +191,8 @@ public sealed class AutoLockMonitorService : IDisposable
             StopMonitorCore();
             ResumeMonitorAfterUnlock = false;
         }
+
+        MonitoringStateChanged?.Invoke(this, new MonitoringStateChangedEventArgs(false));
     }
 
     public void ResetTimeout()
@@ -359,6 +364,7 @@ public sealed class AutoLockMonitorService : IDisposable
             StopMonitorCore();
         }
 
+        MonitoringStateChanged?.Invoke(this, new MonitoringStateChangedEventArgs(false));
         LockSucceededAndPaused?.Invoke(this, EventArgs.Empty);
     }
 
@@ -406,6 +412,11 @@ public sealed record MonitorOptions(
     bool DisableOnExternalPower = false,
     DateTimeOffset? PauseUntilUtc = null,
     string[]? TrustedWifiSsids = null);
+
+public sealed class MonitoringStateChangedEventArgs(bool isMonitoring) : EventArgs
+{
+    public bool IsMonitoring { get; } = isMonitoring;
+}
 
 public sealed class DeviceSightingEventArgs(DeviceSighting sighting) : EventArgs
 {

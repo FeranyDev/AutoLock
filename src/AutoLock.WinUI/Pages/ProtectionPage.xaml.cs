@@ -36,6 +36,7 @@ public sealed partial class ProtectionPage : Page
         }
 
         var monitor = App.State.Monitor;
+        monitor.MonitoringStateChanged += Monitor_MonitoringStateChanged;
         monitor.MonitorDeviceSeen += Monitor_MonitorDeviceSeen;
         monitor.WeakSignalIgnored += Monitor_WeakSignalIgnored;
         monitor.MissingSignalChanged += Monitor_MissingSignalChanged;
@@ -57,6 +58,7 @@ public sealed partial class ProtectionPage : Page
         }
 
         var monitor = App.State.Monitor;
+        monitor.MonitoringStateChanged -= Monitor_MonitoringStateChanged;
         monitor.MonitorDeviceSeen -= Monitor_MonitorDeviceSeen;
         monitor.WeakSignalIgnored -= Monitor_WeakSignalIgnored;
         monitor.MissingSignalChanged -= Monitor_MissingSignalChanged;
@@ -119,7 +121,6 @@ public sealed partial class ProtectionPage : Page
     {
         App.State.Monitor.StopMonitor();
         App.State.ClearBinding();
-        SetMonitoringUi(isMonitoring: false);
         SetInfo(App.State.T("InfoBindingClearedTitle"), App.State.T("InfoBindingCleared"), InfoBarSeverity.Informational);
     }
 
@@ -129,7 +130,6 @@ public sealed partial class ProtectionPage : Page
         if (monitor.IsMonitoring)
         {
             monitor.StopMonitor();
-            SetMonitoringUi(isMonitoring: false);
             HistoryLogManager.Append("Monitor", App.State.T("InfoStoppedTitle"), App.State.T("InfoStoppedMessage"));
             SetInfo(App.State.T("InfoStoppedTitle"), App.State.T("InfoStoppedMessage"), InfoBarSeverity.Informational);
             return;
@@ -157,7 +157,6 @@ public sealed partial class ProtectionPage : Page
 
         var activeIrk = IrkHelper.Normalize(binding.Irk ?? string.Empty);
         monitor.StartMonitor(binding, activeIrk, BuildMonitorOptions(binding, minRssi, DryRunSwitch.IsOn));
-        SetMonitoringUi(isMonitoring: true);
         HistoryLogManager.Append("Monitor", App.State.T("InfoMonitoringTitle"), App.State.F("InfoMonitoring", binding.DisplayAddress));
         SetInfo(App.State.T("InfoMonitoringTitle"), App.State.F("InfoMonitoring", binding.DisplayAddress), InfoBarSeverity.Success);
     }
@@ -342,6 +341,11 @@ public sealed partial class ProtectionPage : Page
         });
     }
 
+    private void Monitor_MonitoringStateChanged(object? sender, MonitoringStateChangedEventArgs e)
+    {
+        Enqueue(() => SetMonitoringUi(e.IsMonitoring));
+    }
+
     private void Monitor_WeakSignalIgnored(object? sender, WeakSignalEventArgs e)
     {
         Enqueue(() => SetInfo(App.State.T("InfoWeakSignalTitle"), App.State.F("InfoWeakSignal", e.Rssi, e.MinRssi), InfoBarSeverity.Warning));
@@ -375,7 +379,6 @@ public sealed partial class ProtectionPage : Page
     {
         Enqueue(() =>
         {
-            SetMonitoringUi(isMonitoring: false);
             HistoryLogManager.Append("Lock", App.State.T("InfoLockedTitle"), App.State.T("InfoPausedAfterLock"));
             SetInfo(App.State.T("InfoLockedTitle"), App.State.T("InfoPausedAfterLock"), InfoBarSeverity.Success);
         });
@@ -420,6 +423,7 @@ public sealed partial class ProtectionPage : Page
 
     private void SetMonitoringUi(bool isMonitoring)
     {
+        StartStopButtonIcon.Glyph = isMonitoring ? "\uE71A" : "\uE768";
         StartStopButtonText.Text = App.State.T(isMonitoring ? "ButtonStopMonitor" : "ButtonStartMonitor");
         SignalText.Text = App.State.T(isMonitoring ? "StatusMonitoringSignal" : "StatusIdle");
     }
