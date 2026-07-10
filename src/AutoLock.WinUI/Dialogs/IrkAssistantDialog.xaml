@@ -5,6 +5,16 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     MinWidth="840">
 
+    <ContentDialog.Resources>
+        <Style x:Key="AssistantCardStyle" TargetType="Border">
+            <Setter Property="Padding" Value="16" />
+            <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
+            <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="{ThemeResource OverlayCornerRadius}" />
+        </Style>
+    </ContentDialog.Resources>
+
     <Grid Width="840" RowSpacing="16">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -38,11 +48,7 @@
                             </Grid.ColumnDefinitions>
 
                             <Border
-                                Padding="16"
-                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                BorderThickness="1"
-                                CornerRadius="8">
+                                Style="{StaticResource AssistantCardStyle}">
                                 <StackPanel Spacing="12">
                                     <Grid ColumnSpacing="10">
                                         <Grid.ColumnDefinitions>
@@ -95,11 +101,7 @@
 
                             <Border
                                 Grid.Column="1"
-                                Padding="16"
-                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                BorderThickness="1"
-                                CornerRadius="8">
+                                Style="{StaticResource AssistantCardStyle}">
                                 <StackPanel Spacing="12">
                                     <Grid ColumnSpacing="10">
                                         <Grid.ColumnDefinitions>
@@ -148,11 +150,7 @@
                         </Grid>
 
                         <Border
-                            Padding="16"
-                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                            BorderThickness="1"
-                            CornerRadius="8">
+                            Style="{StaticResource AssistantCardStyle}">
                             <Grid ColumnSpacing="12" RowSpacing="12">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
@@ -225,11 +223,7 @@
                         </InfoBar>
 
                         <Border
-                            Padding="16"
-                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                            BorderThickness="1"
-                            CornerRadius="8">
+                            Style="{StaticResource AssistantCardStyle}">
                             <StackPanel Spacing="12">
                                 <Grid ColumnSpacing="10">
                                     <Grid.ColumnDefinitions>
@@ -291,11 +285,7 @@
 
         <Border
             Grid.Row="1"
-            Padding="16"
-            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-            BorderThickness="1"
-            CornerRadius="8">
+            Style="{StaticResource AssistantCardStyle}">
             <StackPanel Spacing="8">
                 <TextBlock
                     x:Name="ResultLabelText"

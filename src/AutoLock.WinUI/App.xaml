@@ -10,7 +10,8 @@
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
                 <!-- Other merged dictionaries here -->
             </ResourceDictionary.MergedDictionaries>
-            <x:Double x:Key="ContentDialogMaxWidth">860</x:Double>
+            <!-- Includes the dialog chrome and its built-in horizontal padding. -->
+            <x:Double x:Key="ContentDialogMaxWidth">920</x:Double>
             <!-- Other app resources here -->
         </ResourceDictionary>
     </Application.Resources>
