@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using AutoLock.Core;
+using AutoLock_WinUI.Dialogs;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -72,6 +73,23 @@ public sealed partial class ScanDevicesPage : Page
         SetBusy(false);
         HistoryLogManager.Append("Scan", App.State.T("InfoScanCompleteTitle"), App.State.F("InfoScanComplete", _devices.Count));
         SetInfo(App.State.T("InfoScanCompleteTitle"), App.State.F("InfoScanComplete", _devices.Count), InfoBarSeverity.Success);
+    }
+
+    private async void IrkAssistantButton_Click(object sender, RoutedEventArgs e)
+    {
+        var dialog = new IrkAssistantDialog
+        {
+            XamlRoot = XamlRoot
+        };
+
+        var result = await dialog.ShowAsync();
+        if (result != ContentDialogResult.Primary || string.IsNullOrWhiteSpace(dialog.ResultIrk))
+        {
+            return;
+        }
+
+        IrkBox.Password = dialog.ResultIrk;
+        SetInfo(App.State.T("IrkAssistantAppliedTitle"), App.State.T("IrkAssistantApplied"), InfoBarSeverity.Success);
     }
 
     private void BindSelectedButton_Click(object sender, RoutedEventArgs e)
@@ -149,6 +167,7 @@ public sealed partial class ScanDevicesPage : Page
     {
         ScanButton.IsEnabled = !isBusy;
         BindSelectedButton.IsEnabled = !isBusy;
+        IrkAssistantButton.IsEnabled = !isBusy;
     }
 
     private void SetInfo(string title, string message, InfoBarSeverity severity)
@@ -182,6 +201,7 @@ public sealed partial class ScanDevicesPage : Page
         ScanSecondsBox.Header = App.State.T("LabelScanSeconds");
         IrkBox.Header = App.State.T("LabelIrk");
         IrkBox.PlaceholderText = App.State.T("PlaceholderIrk");
+        IrkAssistantButtonText.Text = App.State.T("ButtonGetIrk");
         ScanButtonText.Text = App.State.T("ButtonScan");
         BindSelectedButtonText.Text = App.State.T("ButtonBindSelected");
         DevicesSectionText.Text = App.State.T("SectionDevices");

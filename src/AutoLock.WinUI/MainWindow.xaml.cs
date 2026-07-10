@@ -42,6 +42,8 @@ public sealed partial class MainWindow : Window
 
     public static MainWindow? ActiveWindow { get; private set; }
 
+    public IntPtr WindowHandle => _windowHandle;
+
     public MainWindow()
     {
         InitializeComponent();

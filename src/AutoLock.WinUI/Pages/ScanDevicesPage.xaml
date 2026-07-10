@@ -45,6 +45,7 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
                     <NumberBox
@@ -59,8 +60,20 @@
                         PlaceholderText="32 位十六进制值" />
 
                     <Button
-                        x:Name="ScanButton"
+                        x:Name="IrkAssistantButton"
                         Grid.Column="2"
+                        Click="IrkAssistantButton_Click"
+                        MinWidth="110"
+                        VerticalAlignment="Bottom">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon Glyph="&#xE897;" />
+                            <TextBlock x:Name="IrkAssistantButtonText" Text="获取 IRK" />
+                        </StackPanel>
+                    </Button>
+
+                    <Button
+                        x:Name="ScanButton"
+                        Grid.Column="3"
                         Click="ScanButton_Click"
                         MinWidth="96"
                         VerticalAlignment="Bottom"
@@ -73,7 +86,7 @@
 
                     <Button
                         x:Name="BindSelectedButton"
-                        Grid.Column="3"
+                        Grid.Column="4"
                         Click="BindSelectedButton_Click"
                         MinWidth="132"
                         VerticalAlignment="Bottom">

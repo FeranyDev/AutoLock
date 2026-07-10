@@ -82,8 +82,10 @@ Windows alone cannot directly extract the Apple Watch IRK. For Apple Watch, avoi
 
 Reference guides:
 
-- [ZuUnlock Apple Watch configuration](https://zu.3gxk.net/docs/guide/apple-watch.html)
-- [ZuUnlock Apple Watch IRK acquisition](https://zu.3gxk.net/docs/guide/irk-apple-watch.html)
+- [ZuUnlock iPhone IRK acquisition](https://zu.3gxk.net/docs/irk/iphone)
+- [ZuUnlock Apple Watch IRK acquisition](https://zu.3gxk.net/docs/irk/apple-watch)
+
+The Scan devices page includes a local IRK acquisition assistant. It can import a Windows Bluetooth registry export for a paired iPhone/iPad, filter records by the device Bluetooth address, and parse macOS Keychain XML, Base64, or hexadecimal Remote IRK content for iPhone and Apple Watch. Imported registry and Keychain source content is processed in memory and is not uploaded or persisted.
 
 ## Product Design
 

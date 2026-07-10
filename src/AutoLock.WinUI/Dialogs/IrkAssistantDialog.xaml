@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentDialog
+    x:Class="AutoLock_WinUI.Dialogs.IrkAssistantDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    MinWidth="680">
+
+    <Grid Width="680" RowSpacing="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TabView
+            x:Name="MethodTabs"
+            IsAddTabButtonVisible="False"
+            TabWidthMode="Equal">
+            <TabViewItem x:Name="WindowsTab" IsClosable="False">
+                <ScrollViewer MaxHeight="430" VerticalScrollBarVisibility="Auto">
+                    <StackPanel Padding="4,12,4,16" Spacing="14">
+                        <InfoBar
+                            x:Name="WindowsGuideInfo"
+                            IsClosable="False"
+                            IsOpen="True"
+                            Severity="Informational" />
+
+                        <TextBox
+                            x:Name="BluetoothAddressBox"
+                            Header="设备蓝牙地址"
+                            PlaceholderText="AA:BB:CC:DD:EE:FF" />
+
+                        <Button Click="ImportRegistryButton_Click" HorizontalAlignment="Left">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xE8E5;" />
+                                <TextBlock x:Name="ImportRegistryButtonText" Text="导入注册表文件" />
+                            </StackPanel>
+                        </Button>
+
+                        <InfoBar
+                            x:Name="WindowsResultInfo"
+                            IsClosable="False"
+                            IsOpen="False" />
+                    </StackPanel>
+                </ScrollViewer>
+            </TabViewItem>
+
+            <TabViewItem x:Name="MacTab" IsClosable="False">
+                <ScrollViewer MaxHeight="430" VerticalScrollBarVisibility="Auto">
+                    <StackPanel Padding="4,12,4,16" Spacing="14">
+                        <InfoBar
+                            x:Name="MacGuideInfo"
+                            IsClosable="False"
+                            IsOpen="True"
+                            Severity="Informational" />
+
+                        <TextBox
+                            x:Name="KeychainContentBox"
+                            AcceptsReturn="True"
+                            Header="钥匙串内容"
+                            Height="150"
+                            TextWrapping="Wrap"
+                            VerticalContentAlignment="Top" />
+
+                        <Button Click="DecodeKeychainButton_Click" HorizontalAlignment="Left">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xE8D7;" />
+                                <TextBlock x:Name="DecodeKeychainButtonText" Text="解析钥匙串内容" />
+                            </StackPanel>
+                        </Button>
+
+                        <InfoBar
+                            x:Name="MacResultInfo"
+                            IsClosable="False"
+                            IsOpen="False" />
+                    </StackPanel>
+                </ScrollViewer>
+            </TabViewItem>
+        </TabView>
+
+        <Border
+            Grid.Row="1"
+            Padding="16"
+            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+            BorderThickness="1"
+            CornerRadius="8">
+            <StackPanel Spacing="8">
+                <TextBlock x:Name="ResultLabelText" FontWeight="SemiBold" Text="解析结果" />
+                <TextBox
+                    x:Name="ResultIrkBox"
+                    IsReadOnly="True"
+                    PlaceholderText="尚未解析出 IRK" />
+                <TextBlock
+                    x:Name="PrivacyText"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    Text="内容仅在本机解析，不会上传或保存。"
+                    TextWrapping="Wrap" />
+            </StackPanel>
+        </Border>
+    </Grid>
+</ContentDialog>
