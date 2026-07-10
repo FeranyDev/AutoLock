@@ -3,11 +3,11 @@
     x:Class="AutoLock_WinUI.Dialogs.IrkAssistantDialog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    MinWidth="760">
+    MinWidth="840">
 
-    <Grid Width="760" RowSpacing="16">
+    <Grid Width="840" RowSpacing="16">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
@@ -16,63 +16,170 @@
             IsAddTabButtonVisible="False"
             TabWidthMode="Equal">
             <TabViewItem x:Name="WindowsTab" IsClosable="False">
-                <ScrollViewer MaxHeight="470" VerticalScrollBarVisibility="Auto">
+                <ScrollViewer
+                    MaxHeight="520"
+                    Padding="0,0,8,0"
+                    VerticalScrollBarVisibility="Auto">
                     <StackPanel Padding="4,12,4,16" Spacing="14">
-                        <Border
-                            Padding="16"
-                            Background="{ThemeResource SystemFillColorAttentionBackgroundBrush}"
-                            CornerRadius="8">
-                            <Grid ColumnSpacing="12">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <FontIcon
-                                    Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-                                    Glyph="&#xE946;"
-                                    FontSize="16" />
-                                <StackPanel Grid.Column="1" Spacing="6">
-                                    <TextBlock
-                                        x:Name="WindowsGuideTitleText"
-                                        FontWeight="SemiBold"
-                                        IsTextSelectionEnabled="True" />
-                                    <TextBlock
-                                        x:Name="WindowsGuideText"
-                                        IsTextSelectionEnabled="True"
-                                        TextWrapping="Wrap" />
-                                </StackPanel>
-                            </Grid>
-                        </Border>
+                        <InfoBar
+                            IsClosable="False"
+                            IsOpen="True"
+                            Severity="Informational">
+                            <TextBlock
+                                x:Name="WindowsGuideText"
+                                IsTextSelectionEnabled="True"
+                                TextWrapping="Wrap" />
+                        </InfoBar>
 
                         <Grid ColumnSpacing="12">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <TextBox
-                                x:Name="SystemCommandBox"
-                                Header="SYSTEM 命令"
-                                IsReadOnly="True"
-                                Text="psexec -s -i regedit" />
-                            <TextBox
-                                x:Name="RegistryPathBox"
+
+                            <Border
+                                Padding="16"
+                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1"
+                                CornerRadius="8">
+                                <StackPanel Spacing="12">
+                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                        <Border
+                                            Width="32"
+                                            Height="32"
+                                            Background="{ThemeResource SystemFillColorAttentionBackgroundBrush}"
+                                            CornerRadius="16">
+                                            <FontIcon
+                                                FontSize="16"
+                                                Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                                                Glyph="&#xE896;" />
+                                        </Border>
+                                        <StackPanel>
+                                            <TextBlock
+                                                x:Name="PsToolsTitleText"
+                                                FontWeight="SemiBold"
+                                                Text="下载 PsTools" />
+                                            <TextBlock
+                                                x:Name="PsToolsDescriptionText"
+                                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                IsTextSelectionEnabled="True"
+                                                TextWrapping="Wrap" />
+                                        </StackPanel>
+                                    </StackPanel>
+
+                                    <HyperlinkButton
+                                        x:Name="PsToolsDownloadLink"
+                                        HorizontalAlignment="Left"
+                                        NavigateUri="https://learn.microsoft.com/en-us/sysinternals/downloads/pstools">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE774;" />
+                                            <TextBlock x:Name="PsToolsDownloadText" />
+                                        </StackPanel>
+                                    </HyperlinkButton>
+
+                                    <TextBox
+                                        x:Name="PsToolsUrlBox"
+                                        Header="官方下载链接"
+                                        IsReadOnly="True"
+                                        Text="https://learn.microsoft.com/en-us/sysinternals/downloads/pstools" />
+                                </StackPanel>
+                            </Border>
+
+                            <Border
                                 Grid.Column="1"
-                                Header="注册表路径"
-                                IsReadOnly="True"
-                                Text="HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\BTHPORT\Parameters\Keys" />
+                                Padding="16"
+                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1"
+                                CornerRadius="8">
+                                <StackPanel Spacing="12">
+                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                        <Border
+                                            Width="32"
+                                            Height="32"
+                                            Background="{ThemeResource SystemFillColorSuccessBackgroundBrush}"
+                                            CornerRadius="16">
+                                            <FontIcon
+                                                FontSize="16"
+                                                Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                                                Glyph="&#xE7EF;" />
+                                        </Border>
+                                        <StackPanel>
+                                            <TextBlock
+                                                x:Name="WindowsExportTitleText"
+                                                FontWeight="SemiBold"
+                                                Text="导出配对记录" />
+                                            <TextBlock
+                                                x:Name="WindowsExportDescriptionText"
+                                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                IsTextSelectionEnabled="True"
+                                                TextWrapping="Wrap" />
+                                        </StackPanel>
+                                    </StackPanel>
+
+                                    <TextBox
+                                        x:Name="SystemCommandBox"
+                                        Header="SYSTEM 命令"
+                                        IsReadOnly="True"
+                                        Text="psexec -s -i regedit" />
+
+                                    <TextBox
+                                        x:Name="RegistryPathBox"
+                                        Header="注册表路径"
+                                        IsReadOnly="True"
+                                        Text="HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\BTHPORT\Parameters\Keys" />
+                                </StackPanel>
+                            </Border>
                         </Grid>
 
-                        <TextBox
-                            x:Name="BluetoothAddressBox"
-                            Header="设备蓝牙地址"
-                            PlaceholderText="AA:BB:CC:DD:EE:FF" />
+                        <Border
+                            Padding="16"
+                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            BorderThickness="1"
+                            CornerRadius="8">
+                            <Grid ColumnSpacing="12" RowSpacing="12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
 
-                        <Button Click="ImportRegistryButton_Click" HorizontalAlignment="Left">
-                            <StackPanel Orientation="Horizontal" Spacing="8">
-                                <FontIcon Glyph="&#xE8E5;" />
-                                <TextBlock x:Name="ImportRegistryButtonText" Text="导入注册表文件" />
-                            </StackPanel>
-                        </Button>
+                                <StackPanel Spacing="4">
+                                    <TextBlock
+                                        x:Name="WindowsImportTitleText"
+                                        FontWeight="SemiBold"
+                                        Text="导入并解析" />
+                                    <TextBlock
+                                        x:Name="WindowsImportDescriptionText"
+                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                        IsTextSelectionEnabled="True"
+                                        TextWrapping="Wrap" />
+                                </StackPanel>
+
+                                <Button
+                                    Grid.Column="1"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Top"
+                                    Click="ImportRegistryButton_Click">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <FontIcon Glyph="&#xE8E5;" />
+                                        <TextBlock x:Name="ImportRegistryButtonText" Text="导入 .reg 文件" />
+                                    </StackPanel>
+                                </Button>
+
+                                <TextBox
+                                    x:Name="BluetoothAddressBox"
+                                    Grid.Row="1"
+                                    Grid.ColumnSpan="2"
+                                    Header="设备蓝牙地址"
+                                    PlaceholderText="AA:BB:CC:DD:EE:FF" />
+                            </Grid>
+                        </Border>
 
                         <InfoBar
                             x:Name="WindowsResultInfo"
@@ -88,48 +195,67 @@
             </TabViewItem>
 
             <TabViewItem x:Name="MacTab" IsClosable="False">
-                <ScrollViewer MaxHeight="470" VerticalScrollBarVisibility="Auto">
+                <ScrollViewer
+                    MaxHeight="520"
+                    Padding="0,0,8,0"
+                    VerticalScrollBarVisibility="Auto">
                     <StackPanel Padding="4,12,4,16" Spacing="14">
+                        <InfoBar
+                            IsClosable="False"
+                            IsOpen="True"
+                            Severity="Informational">
+                            <TextBlock
+                                x:Name="MacGuideText"
+                                IsTextSelectionEnabled="True"
+                                TextWrapping="Wrap" />
+                        </InfoBar>
+
                         <Border
                             Padding="16"
-                            Background="{ThemeResource SystemFillColorAttentionBackgroundBrush}"
+                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            BorderThickness="1"
                             CornerRadius="8">
-                            <Grid ColumnSpacing="12">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <FontIcon
-                                    Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-                                    Glyph="&#xE946;"
-                                    FontSize="16" />
-                                <StackPanel Grid.Column="1" Spacing="6">
-                                    <TextBlock
-                                        x:Name="MacGuideTitleText"
-                                        FontWeight="SemiBold"
-                                        IsTextSelectionEnabled="True" />
-                                    <TextBlock
-                                        x:Name="MacGuideText"
-                                        IsTextSelectionEnabled="True"
-                                        TextWrapping="Wrap" />
+                            <StackPanel Spacing="12">
+                                <StackPanel Orientation="Horizontal" Spacing="10">
+                                    <Border
+                                        Width="32"
+                                        Height="32"
+                                        Background="{ThemeResource SystemFillColorAttentionBackgroundBrush}"
+                                        CornerRadius="16">
+                                        <FontIcon
+                                            FontSize="16"
+                                            Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                                            Glyph="&#xE946;" />
+                                    </Border>
+                                    <StackPanel>
+                                        <TextBlock
+                                            x:Name="MacGuideTitleText"
+                                            FontWeight="SemiBold" />
+                                        <TextBlock
+                                            x:Name="MacGuideDescriptionText"
+                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                            IsTextSelectionEnabled="True"
+                                            TextWrapping="Wrap" />
+                                    </StackPanel>
                                 </StackPanel>
-                            </Grid>
-                        </Border>
 
-                        <TextBox
-                            x:Name="KeychainContentBox"
-                            AcceptsReturn="True"
-                            Header="钥匙串内容"
-                            Height="150"
-                            TextWrapping="Wrap"
-                            VerticalContentAlignment="Top" />
+                                <TextBox
+                                    x:Name="KeychainContentBox"
+                                    AcceptsReturn="True"
+                                    Header="钥匙串内容"
+                                    Height="190"
+                                    TextWrapping="Wrap"
+                                    VerticalContentAlignment="Top" />
 
-                        <Button Click="DecodeKeychainButton_Click" HorizontalAlignment="Left">
-                            <StackPanel Orientation="Horizontal" Spacing="8">
-                                <FontIcon Glyph="&#xE8D7;" />
-                                <TextBlock x:Name="DecodeKeychainButtonText" Text="解析钥匙串内容" />
+                                <Button Click="DecodeKeychainButton_Click" HorizontalAlignment="Left">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <FontIcon Glyph="&#xE8D7;" />
+                                        <TextBlock x:Name="DecodeKeychainButtonText" Text="解析钥匙串内容" />
+                                    </StackPanel>
+                                </Button>
                             </StackPanel>
-                        </Button>
+                        </Border>
 
                         <InfoBar
                             x:Name="MacResultInfo"
@@ -153,7 +279,10 @@
             BorderThickness="1"
             CornerRadius="8">
             <StackPanel Spacing="8">
-                <TextBlock x:Name="ResultLabelText" FontWeight="SemiBold" Text="解析结果" />
+                <TextBlock
+                    x:Name="ResultLabelText"
+                    FontWeight="SemiBold"
+                    Text="解析结果" />
                 <TextBox
                     x:Name="ResultIrkBox"
                     IsReadOnly="True"
