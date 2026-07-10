@@ -141,6 +141,14 @@ public sealed partial class MainWindow : Window
 
     private async Task OnWindowReadyAsync()
     {
+        if (App.State.BindingDecryptionFailed)
+        {
+            App.State.Notify(
+                App.State.T("InfoIrkDecryptFailedTitle"),
+                App.State.T("InfoIrkDecryptFailed"),
+                AppNotificationKind.Error);
+        }
+
         if (App.State.Settings.RunInBackground && Environment.GetCommandLineArgs().Any(x => string.Equals(x, "--background", StringComparison.OrdinalIgnoreCase)))
         {
             HideToTray();

@@ -1,4 +1,5 @@
 using AutoLock.Core;
+using System.Security.Cryptography;
 
 namespace AutoLock_WinUI.Services;
 
@@ -16,13 +17,25 @@ public sealed class AutoLockAppState : IDisposable
 
     public BindingConfig? Binding { get; private set; }
 
+    public bool BindingDecryptionFailed { get; private set; }
+
     public AppSettings Settings { get; private set; } = AppSettings.Default;
 
     public string Language => WinUiLocalizer.NormalizeLanguage(Settings.Language);
 
     public void Load()
     {
-        Binding = BindingConfigManager.Load();
+        BindingDecryptionFailed = false;
+        try
+        {
+            Binding = BindingConfigManager.Load();
+        }
+        catch (CryptographicException)
+        {
+            Binding = null;
+            BindingDecryptionFailed = true;
+        }
+
         Settings = NormalizeSettings(AppSettingsManager.Load());
     }
 
@@ -30,6 +43,7 @@ public sealed class AutoLockAppState : IDisposable
     {
         BindingConfigManager.Save(binding);
         Binding = binding;
+        BindingDecryptionFailed = false;
         if (logHistory)
         {
             HistoryLogManager.Append("Binding", T("InfoBoundTitle"), F("InfoBound", binding.MaskedIdentity), binding);
@@ -43,6 +57,7 @@ public sealed class AutoLockAppState : IDisposable
         var previousBinding = Binding;
         BindingConfigManager.Delete();
         Binding = null;
+        BindingDecryptionFailed = false;
         HistoryLogManager.Append("Binding", T("InfoBindingClearedTitle"), T("InfoBindingCleared"), previousBinding);
         BindingChanged?.Invoke(this, EventArgs.Empty);
     }
