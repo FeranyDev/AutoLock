@@ -26,7 +26,7 @@ Build with the .NET SDK on Windows:
 dotnet build .\src\AutoLock.WinUI\AutoLock.WinUI.csproj
 ```
 
-GitHub Actions builds the WinUI project on `push` and `pull_request`, and uploads a x64 folder package for non-PR runs. A manual release workflow can generate folder or MSIX artifacts from the Actions tab.
+GitHub Actions builds the WinUI project on `push` and `pull_request`. Non-PR runs upload one x64 artifact containing the portable `folder/` output and an unsigned `msix/` package. The artifact download is already a ZIP, so it does not contain a second nested portable ZIP. A manual release workflow can generate folder, MSIX, or both outputs from the Actions tab.
 
 Run the UI:
 

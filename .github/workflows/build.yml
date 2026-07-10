@@ -22,10 +22,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 10.0.x
 
@@ -42,31 +42,32 @@ jobs:
         run: dotnet build $env:PROJECT_PATH --configuration Release --runtime $env:RUNTIME_IDENTIFIER --no-restore
 
   package:
-    name: Publish release folder
+    name: Publish release packages
     runs-on: windows-latest
     needs: build
     if: github.event_name != 'pull_request'
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 10.0.x
 
-      - name: Publish x64 folder package
+      - name: Publish x64 packages
         shell: pwsh
         run: >
           ./scripts/publish.ps1
-          -Mode Folder
+          -Mode All
           -RuntimeIdentifier win-x64
           -Version "0.1.${{ github.run_number }}"
           -Clean
+          -NoZip
 
       - name: Upload release artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: AutoLock-win-x64
           path: artifacts/release/
