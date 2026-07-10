@@ -24,7 +24,7 @@
 
 仓库包含两个工作流：
 
-- `.github/workflows/build.yml`：在 `push` 和 `pull_request` 时自动还原、Debug 构建、Release 构建。非 PR 运行会生成 x64 便携目录版和未签名 MSIX，并上传为一个 artifact。
+- `.github/workflows/build.yml`：在 `push` 和 `pull_request` 时自动还原、Debug 构建、Release 构建。非 PR 运行会生成 x64 便携目录版和未签名 MSIX，并分别上传为两个 artifact。
 - `.github/workflows/release.yml`：手动触发的发布工作流，可以在 GitHub Actions 页面选择版本号、运行时和发布模式，默认生成全部格式。
 
 手动发布时可选：
@@ -33,7 +33,7 @@
 - `Msix`
 - `All`
 
-GitHub 下载的 artifact 本身就是 ZIP。工作流会向脚本传入 `-NoZip`，因此解压后只包含 `folder/` 和/或 `msix/`，不会再嵌套一份重复的 `*-folder.zip`。
+GitHub 下载的 artifact 本身就是 ZIP。工作流会向脚本传入 `-NoZip`，并将便携版上传为 `*-portable`、MSIX 上传为 `*-msix` 两个独立下载项，不会再嵌套一份重复的 `*-folder.zip`。手动发布选择单一模式时，只会上传对应的 artifact。
 
 如果要在 GitHub Actions 中生成签名 MSIX，建议先在仓库 Secrets 中配置证书内容和密码，再扩展 `release.yml` 调用 `scripts/publish.ps1` 的 `-CertificatePath` / `-CertificatePassword` 参数。不要把 `.pfx` 文件或密码提交到仓库。
 

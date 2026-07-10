@@ -66,9 +66,16 @@ jobs:
           -Clean
           -NoZip
 
-      - name: Upload release artifacts
+      - name: Upload portable artifact
         uses: actions/upload-artifact@v7
         with:
-          name: AutoLock-win-x64
-          path: artifacts/release/
+          name: AutoLock-0.1.${{ github.run_number }}-win-x64-portable
+          path: artifacts/release/AutoLock-0.1.${{ github.run_number }}-win-x64/folder/
+          if-no-files-found: error
+
+      - name: Upload MSIX artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: AutoLock-0.1.${{ github.run_number }}-win-x64-msix
+          path: artifacts/release/AutoLock-0.1.${{ github.run_number }}-win-x64/msix/
           if-no-files-found: error

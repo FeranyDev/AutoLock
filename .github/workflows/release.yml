@@ -54,9 +54,18 @@ jobs:
           -Clean
           -NoZip
 
-      - name: Upload release artifacts
+      - name: Upload portable artifact
+        if: ${{ inputs.mode == 'Folder' || inputs.mode == 'All' }}
         uses: actions/upload-artifact@v7
         with:
-          name: AutoLock-${{ inputs.version }}-${{ inputs.runtime }}
-          path: artifacts/release/
+          name: AutoLock-${{ inputs.version }}-${{ inputs.runtime }}-portable
+          path: artifacts/release/AutoLock-${{ inputs.version }}-${{ inputs.runtime }}/folder/
+          if-no-files-found: error
+
+      - name: Upload MSIX artifact
+        if: ${{ inputs.mode == 'Msix' || inputs.mode == 'All' }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: AutoLock-${{ inputs.version }}-${{ inputs.runtime }}-msix
+          path: artifacts/release/AutoLock-${{ inputs.version }}-${{ inputs.runtime }}/msix/
           if-no-files-found: error
