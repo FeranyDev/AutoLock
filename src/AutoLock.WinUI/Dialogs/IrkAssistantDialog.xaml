@@ -44,7 +44,11 @@
                                 BorderThickness="1"
                                 CornerRadius="8">
                                 <StackPanel Spacing="12">
-                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                    <Grid ColumnSpacing="10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
                                         <Border
                                             Width="32"
                                             Height="32"
@@ -55,7 +59,7 @@
                                                 Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
                                                 Glyph="&#xE896;" />
                                         </Border>
-                                        <StackPanel>
+                                        <StackPanel Grid.Column="1">
                                             <TextBlock
                                                 x:Name="PsToolsTitleText"
                                                 FontWeight="SemiBold"
@@ -66,7 +70,7 @@
                                                 IsTextSelectionEnabled="True"
                                                 TextWrapping="Wrap" />
                                         </StackPanel>
-                                    </StackPanel>
+                                    </Grid>
 
                                     <HyperlinkButton
                                         x:Name="PsToolsDownloadLink"
@@ -80,9 +84,12 @@
 
                                     <TextBox
                                         x:Name="PsToolsUrlBox"
+                                        AcceptsReturn="True"
                                         Header="官方下载链接"
+                                        MinHeight="64"
                                         IsReadOnly="True"
-                                        Text="https://learn.microsoft.com/en-us/sysinternals/downloads/pstools" />
+                                        Text="https://learn.microsoft.com/en-us/sysinternals/downloads/pstools"
+                                        TextWrapping="Wrap" />
                                 </StackPanel>
                             </Border>
 
@@ -94,7 +101,11 @@
                                 BorderThickness="1"
                                 CornerRadius="8">
                                 <StackPanel Spacing="12">
-                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                    <Grid ColumnSpacing="10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
                                         <Border
                                             Width="32"
                                             Height="32"
@@ -105,7 +116,7 @@
                                                 Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
                                                 Glyph="&#xE7EF;" />
                                         </Border>
-                                        <StackPanel>
+                                        <StackPanel Grid.Column="1">
                                             <TextBlock
                                                 x:Name="WindowsExportTitleText"
                                                 FontWeight="SemiBold"
@@ -116,7 +127,7 @@
                                                 IsTextSelectionEnabled="True"
                                                 TextWrapping="Wrap" />
                                         </StackPanel>
-                                    </StackPanel>
+                                    </Grid>
 
                                     <TextBox
                                         x:Name="SystemCommandBox"
@@ -126,9 +137,12 @@
 
                                     <TextBox
                                         x:Name="RegistryPathBox"
+                                        AcceptsReturn="True"
                                         Header="注册表路径"
+                                        MinHeight="64"
                                         IsReadOnly="True"
-                                        Text="HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\BTHPORT\Parameters\Keys" />
+                                        Text="HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\BTHPORT\Parameters\Keys"
+                                        TextWrapping="Wrap" />
                                 </StackPanel>
                             </Border>
                         </Grid>
@@ -149,7 +163,7 @@
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
 
-                                <StackPanel Spacing="4">
+                                <StackPanel Grid.ColumnSpan="2" Spacing="4">
                                     <TextBlock
                                         x:Name="WindowsImportTitleText"
                                         FontWeight="SemiBold"
@@ -162,6 +176,7 @@
                                 </StackPanel>
 
                                 <Button
+                                    Grid.Row="1"
                                     Grid.Column="1"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Top"
@@ -175,7 +190,6 @@
                                 <TextBox
                                     x:Name="BluetoothAddressBox"
                                     Grid.Row="1"
-                                    Grid.ColumnSpan="2"
                                     Header="设备蓝牙地址"
                                     PlaceholderText="AA:BB:CC:DD:EE:FF" />
                             </Grid>
@@ -217,7 +231,11 @@
                             BorderThickness="1"
                             CornerRadius="8">
                             <StackPanel Spacing="12">
-                                <StackPanel Orientation="Horizontal" Spacing="10">
+                                <Grid ColumnSpacing="10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
                                     <Border
                                         Width="32"
                                         Height="32"
@@ -228,7 +246,7 @@
                                             Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
                                             Glyph="&#xE946;" />
                                     </Border>
-                                    <StackPanel>
+                                    <StackPanel Grid.Column="1">
                                         <TextBlock
                                             x:Name="MacGuideTitleText"
                                             FontWeight="SemiBold" />
@@ -238,7 +256,7 @@
                                             IsTextSelectionEnabled="True"
                                             TextWrapping="Wrap" />
                                     </StackPanel>
-                                </StackPanel>
+                                </Grid>
 
                                 <TextBox
                                     x:Name="KeychainContentBox"
