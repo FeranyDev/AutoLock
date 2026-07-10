@@ -29,11 +29,14 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
-      - name: Restore
-        run: dotnet restore $env:PROJECT_PATH --runtime $env:RUNTIME_IDENTIFIER
+      - name: Restore Debug
+        run: dotnet restore $env:PROJECT_PATH --runtime $env:RUNTIME_IDENTIFIER --property:Configuration=Debug
 
       - name: Build Debug
         run: dotnet build $env:PROJECT_PATH --configuration Debug --runtime $env:RUNTIME_IDENTIFIER --no-restore
+
+      - name: Restore Release
+        run: dotnet restore $env:PROJECT_PATH --runtime $env:RUNTIME_IDENTIFIER --property:Configuration=Release --property:PublishReadyToRun=true
 
       - name: Build Release
         run: dotnet build $env:PROJECT_PATH --configuration Release --runtime $env:RUNTIME_IDENTIFIER --no-restore
