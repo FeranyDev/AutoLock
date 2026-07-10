@@ -53,6 +53,7 @@ jobs:
           -Version "${{ inputs.version }}"
           -Clean
           -NoZip
+          -CreateTestCertificate
 
       - name: Upload portable artifact
         if: ${{ inputs.mode == 'Folder' || inputs.mode == 'All' }}

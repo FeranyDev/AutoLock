@@ -24,7 +24,7 @@
 
 仓库包含两个工作流：
 
-- `.github/workflows/build.yml`：在 `push` 和 `pull_request` 时自动还原、Debug 构建、Release 构建。非 PR 运行会生成 x64 便携目录版和未签名 MSIX，并分别上传为两个 artifact。
+- `.github/workflows/build.yml`：在 `push` 和 `pull_request` 时自动还原、Debug 构建、Release 构建。非 PR 运行会生成 x64 便携目录版和测试证书签名的 MSIX，并分别上传为两个 artifact。
 - `.github/workflows/release.yml`：手动触发的发布工作流，可以在 GitHub Actions 页面选择版本号、运行时和发布模式，默认生成全部格式。
 
 手动发布时可选：
@@ -35,7 +35,9 @@
 
 GitHub 下载的 artifact 本身就是 ZIP。工作流会向脚本传入 `-NoZip`，并将便携版上传为 `*-portable`、MSIX 上传为 `*-msix` 两个独立下载项，不会再嵌套一份重复的 `*-folder.zip`。手动发布选择单一模式时，只会上传对应的 artifact。
 
-如果要在 GitHub Actions 中生成签名 MSIX，建议先在仓库 Secrets 中配置证书内容和密码，再扩展 `release.yml` 调用 `scripts/publish.ps1` 的 `-CertificatePath` / `-CertificatePassword` 参数。不要把 `.pfx` 文件或密码提交到仓库。
+Actions 会为每次 MSIX 构建创建临时自签代码签名证书，通过当前用户证书库完成签名，然后删除证书库中的私钥。Artifact 只包含公开 `.cer`、MSIX、依赖和安装脚本，不生成或上传 `.pfx`。
+
+解压 `*-msix` artifact，进入 `*_Test` 目录，以管理员身份运行 `Install.ps1`。脚本会提示信任随包提供的测试证书，并安装适用架构的依赖和主 MSIX。测试证书仅适合开发和内部测试；公开发布仍应在仓库 Secrets 中配置正式证书，并让 `release.yml` 调用 `-CertificatePath` / `-CertificatePassword`。
 
 默认生成 x64 Release 目录版发布包：
 
@@ -98,7 +100,6 @@ artifacts\release\AutoLock-1.0.0-win-x64\AutoLock-1.0.0-win-x64-folder.zip
   -RuntimeIdentifier win-x64 `
   -Version 1.0.0 `
   -CreateTestCertificate `
-  -CertificatePassword "change-this-password" `
   -InstallCertificate `
   -Clean
 ```
@@ -108,6 +109,7 @@ artifacts\release\AutoLock-1.0.0-win-x64\AutoLock-1.0.0-win-x64-folder.zip
 - `Package.appxmanifest` 当前 Publisher 是 `CN=AppPublisher`。
 - 签名证书 Subject 必须与 Publisher 匹配。
 - 脚本默认生成 `CN=AppPublisher` 证书，因此无需额外修改。
+- 测试证书使用证书库私钥完成签名，输出中只保留公开 CER，不生成 PFX。
 - 正式发布时应使用可信代码签名证书，而不是测试证书。
 
 ### 使用已有证书
@@ -143,7 +145,6 @@ artifacts\release\AutoLock-1.0.0-win-x64\AutoLock-1.0.0-win-x64-folder.zip
   -RuntimeIdentifier win-x64 `
   -Version 1.0.0 `
   -CreateTestCertificate `
-  -CertificatePassword "change-this-password" `
   -InstallCertificate `
   -Clean
 ```

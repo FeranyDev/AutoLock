@@ -34,7 +34,15 @@ function Invoke-Checked {
         [string[]]$Arguments
     )
 
-    Write-Host ">> $FilePath $($Arguments -join ' ')" -ForegroundColor Cyan
+    $displayArguments = $Arguments | ForEach-Object {
+        if ($_ -match "(?i)^(.*(?:Password|Token|Secret)=).+$") {
+            return "$($Matches[1])***"
+        }
+
+        return $_
+    }
+
+    Write-Host ">> $FilePath $($displayArguments -join ' ')" -ForegroundColor Cyan
     & $FilePath @Arguments
     if ($LASTEXITCODE -ne 0) {
         throw "Command failed with exit code $LASTEXITCODE."
@@ -84,14 +92,9 @@ function Resolve-SafeOutputRoot {
 function New-ReleaseCertificate {
     param(
         [Parameter(Mandatory = $true)][string]$Subject,
-        [Parameter(Mandatory = $true)][string]$Password,
         [Parameter(Mandatory = $true)][string]$CertificateDirectory,
         [switch]$InstallToTrustedPeople
     )
-
-    if ([string]::IsNullOrWhiteSpace($Password)) {
-        throw "CertificatePassword is required when CreateTestCertificate is used."
-    }
 
     New-Item -ItemType Directory -Force -Path $CertificateDirectory | Out-Null
 
@@ -101,14 +104,13 @@ function New-ReleaseCertificate {
         -KeyUsage DigitalSignature `
         -FriendlyName "AutoLock test signing certificate" `
         -CertStoreLocation "Cert:\CurrentUser\My" `
-        -TextExtension @("2.5.29.37={text}1.3.6.1.5.5.7.3.3") `
+        -TextExtension @(
+            "2.5.29.37={text}1.3.6.1.5.5.7.3.3",
+            "2.5.29.19={text}") `
         -NotAfter (Get-Date).AddYears(3)
 
-    $securePassword = ConvertTo-SecureString -String $Password -Force -AsPlainText
-    $pfxPath = Join-Path $CertificateDirectory "AutoLock-TestSigning.pfx"
     $cerPath = Join-Path $CertificateDirectory "AutoLock-TestSigning.cer"
 
-    Export-PfxCertificate -Cert $cert -FilePath $pfxPath -Password $securePassword | Out-Null
     Export-Certificate -Cert $cert -FilePath $cerPath | Out-Null
 
     if ($InstallToTrustedPeople) {
@@ -116,7 +118,8 @@ function New-ReleaseCertificate {
     }
 
     return [pscustomobject]@{
-        Path = $pfxPath
+        CerPath = $cerPath
+        StorePath = "Cert:\CurrentUser\My\$($cert.Thumbprint)"
         Thumbprint = $cert.Thumbprint
     }
 }
@@ -153,16 +156,6 @@ if ($Clean -and (Test-Path $OutputRoot)) {
 }
 
 New-Item -ItemType Directory -Force -Path $OutputRoot | Out-Null
-
-if ($CreateTestCertificate) {
-    $certificate = New-ReleaseCertificate `
-        -Subject $CertificateSubject `
-        -Password $CertificatePassword `
-        -CertificateDirectory (Join-Path $OutputRoot "certificates") `
-        -InstallToTrustedPeople:$InstallCertificate
-    $CertificatePath = $certificate.Path
-    $CertificateThumbprint = $certificate.Thumbprint
-}
 
 $publishFolder = Join-Path $OutputRoot "folder"
 $msixFolder = Join-Path $OutputRoot "msix"
@@ -202,6 +195,15 @@ if ($Mode -eq "Folder" -or $Mode -eq "All") {
 
 if ($Mode -eq "Msix" -or $Mode -eq "All") {
     New-Item -ItemType Directory -Force -Path $msixFolder | Out-Null
+
+    $generatedCertificate = $null
+    if ($CreateTestCertificate) {
+        $generatedCertificate = New-ReleaseCertificate `
+            -Subject $CertificateSubject `
+            -CertificateDirectory (Join-Path $OutputRoot "certificates") `
+            -InstallToTrustedPeople:$InstallCertificate
+        $CertificateThumbprint = $generatedCertificate.Thumbprint
+    }
 
     $signingEnabled = -not [string]::IsNullOrWhiteSpace($CertificatePath) -or
         -not [string]::IsNullOrWhiteSpace($CertificateThumbprint)
@@ -245,6 +247,26 @@ if ($Mode -eq "Msix" -or $Mode -eq "All") {
             $manifestPath,
             $originalManifest,
             [System.Text.UTF8Encoding]::new($false))
+
+        if ($generatedCertificate -and (Test-Path $generatedCertificate.StorePath)) {
+            Remove-Item -LiteralPath $generatedCertificate.StorePath -Force
+            Write-Host "Removed temporary test certificate private key from the signing store." -ForegroundColor DarkGray
+        }
+    }
+
+    if ($generatedCertificate -and (Test-Path $generatedCertificate.CerPath)) {
+        $installDirectories = Get-ChildItem -Path $msixFolder -Recurse -Filter "Install.ps1" -File |
+            Select-Object -ExpandProperty DirectoryName -Unique
+
+        foreach ($installDirectory in $installDirectories) {
+            $existingCertificates = @(Get-ChildItem -LiteralPath $installDirectory -Filter "*.cer" -File)
+            if ($existingCertificates.Count -eq 0) {
+                Copy-Item `
+                    -LiteralPath $generatedCertificate.CerPath `
+                    -Destination (Join-Path $installDirectory "AutoLock-TestSigning.cer") `
+                    -Force
+            }
+        }
     }
 
     $packages = Get-ChildItem -Path $msixFolder -Recurse -File |

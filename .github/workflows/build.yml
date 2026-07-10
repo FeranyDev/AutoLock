@@ -65,6 +65,7 @@ jobs:
           -Version "0.1.${{ github.run_number }}"
           -Clean
           -NoZip
+          -CreateTestCertificate
 
       - name: Upload portable artifact
         uses: actions/upload-artifact@v7
