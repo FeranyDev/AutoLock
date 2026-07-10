@@ -29,7 +29,7 @@ public sealed record HistoryLogEntry(
 
 public static class HistoryLogManager
 {
-    private const int MaxEntries = 300;
+    private const int MaxEntries = 100;
 
     private static readonly string AppDir = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
@@ -48,7 +48,26 @@ public static class HistoryLogManager
 
         try
         {
-            return JsonSerializer.Deserialize<List<HistoryLogEntry>>(File.ReadAllText(HistoryPath), JsonOptions) ?? [];
+            var entries = JsonSerializer.Deserialize<List<HistoryLogEntry>>(File.ReadAllText(HistoryPath), JsonOptions) ?? [];
+            if (entries.Count <= MaxEntries)
+            {
+                return entries;
+            }
+
+            var trimmedEntries = entries.Take(MaxEntries).ToList();
+            // Keep the in-memory limit even when an existing history file cannot be rewritten.
+            try
+            {
+                SaveEntries(trimmedEntries);
+            }
+            catch (IOException)
+            {
+            }
+            catch (UnauthorizedAccessException)
+            {
+            }
+
+            return trimmedEntries;
         }
         catch (JsonException)
         {
@@ -71,8 +90,7 @@ public static class HistoryLogManager
             .Take(MaxEntries)
             .ToList();
 
-        Directory.CreateDirectory(AppDir);
-        File.WriteAllText(HistoryPath, JsonSerializer.Serialize(entries, JsonOptions));
+        SaveEntries(entries);
     }
 
     public static void Clear()
@@ -81,6 +99,12 @@ public static class HistoryLogManager
         {
             File.Delete(HistoryPath);
         }
+    }
+
+    private static void SaveEntries(IReadOnlyCollection<HistoryLogEntry> entries)
+    {
+        Directory.CreateDirectory(AppDir);
+        File.WriteAllText(HistoryPath, JsonSerializer.Serialize(entries, JsonOptions));
     }
 
     private static readonly JsonSerializerOptions JsonOptions = new()
