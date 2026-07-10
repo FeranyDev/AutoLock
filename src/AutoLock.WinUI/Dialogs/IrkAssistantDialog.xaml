@@ -15,19 +15,14 @@
         </Style>
     </ContentDialog.Resources>
 
-    <Grid Width="840" RowSpacing="16">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-
+    <Grid Width="840">
         <TabView
             x:Name="MethodTabs"
             IsAddTabButtonVisible="False"
             TabWidthMode="Equal">
             <TabViewItem x:Name="WindowsTab" IsClosable="False">
                 <ScrollViewer
-                    MaxHeight="520"
+                    MaxHeight="650"
                     Padding="0,0,8,0"
                     VerticalScrollBarVisibility="Auto">
                     <StackPanel Padding="4,12,4,16" Spacing="14">
@@ -151,64 +146,97 @@
 
                         <Border
                             Style="{StaticResource AssistantCardStyle}">
-                            <Grid ColumnSpacing="12" RowSpacing="12">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
+                            <StackPanel Spacing="14">
+                                <Grid ColumnSpacing="10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Border
+                                        Width="32"
+                                        Height="32"
+                                        Background="{ThemeResource SystemFillColorAttentionBackgroundBrush}"
+                                        CornerRadius="16">
+                                        <FontIcon
+                                            FontSize="16"
+                                            Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                                            Glyph="&#xE8E5;" />
+                                    </Border>
+                                    <StackPanel Grid.Column="1" Spacing="4">
+                                        <TextBlock
+                                            x:Name="WindowsImportTitleText"
+                                            FontWeight="SemiBold"
+                                            Text="导入并解析" />
+                                        <TextBlock
+                                            x:Name="WindowsImportDescriptionText"
+                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                            IsTextSelectionEnabled="True"
+                                            TextWrapping="Wrap" />
+                                    </StackPanel>
+                                </Grid>
 
-                                <StackPanel Grid.ColumnSpan="2" Spacing="4">
+                                <Grid ColumnSpacing="12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox
+                                        x:Name="BluetoothAddressBox"
+                                        Header="设备蓝牙地址"
+                                        PlaceholderText="AA:BB:CC:DD:EE:FF" />
+                                    <Button
+                                        Grid.Column="1"
+                                        MinWidth="156"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Bottom"
+                                        Click="ImportRegistryButton_Click">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE8E5;" />
+                                            <TextBlock x:Name="ImportRegistryButtonText" Text="导入 .reg 文件" />
+                                        </StackPanel>
+                                    </Button>
+                                </Grid>
+
+                                <InfoBar
+                                    x:Name="WindowsResultInfo"
+                                    IsClosable="False"
+                                    IsOpen="False">
                                     <TextBlock
-                                        x:Name="WindowsImportTitleText"
-                                        FontWeight="SemiBold"
-                                        Text="导入并解析" />
-                                    <TextBlock
-                                        x:Name="WindowsImportDescriptionText"
-                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                        x:Name="WindowsResultText"
                                         IsTextSelectionEnabled="True"
                                         TextWrapping="Wrap" />
+                                </InfoBar>
+
+                                <Border
+                                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                    BorderThickness="0,1,0,0" />
+
+                                <StackPanel Spacing="8">
+                                    <TextBlock
+                                        x:Name="WindowsResultLabelText"
+                                        FontWeight="SemiBold"
+                                        Text="解析结果" />
+                                    <TextBox
+                                        x:Name="WindowsResultIrkBox"
+                                        FontFamily="Consolas"
+                                        IsReadOnly="True"
+                                        PlaceholderText="尚未解析出 IRK" />
+                                    <TextBlock
+                                        x:Name="WindowsPrivacyText"
+                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                        IsTextSelectionEnabled="True"
+                                        Text="内容仅在本机解析，不会上传或保存。"
+                                        TextWrapping="Wrap" />
                                 </StackPanel>
-
-                                <Button
-                                    Grid.Row="1"
-                                    Grid.Column="1"
-                                    HorizontalAlignment="Right"
-                                    VerticalAlignment="Top"
-                                    Click="ImportRegistryButton_Click">
-                                    <StackPanel Orientation="Horizontal" Spacing="8">
-                                        <FontIcon Glyph="&#xE8E5;" />
-                                        <TextBlock x:Name="ImportRegistryButtonText" Text="导入 .reg 文件" />
-                                    </StackPanel>
-                                </Button>
-
-                                <TextBox
-                                    x:Name="BluetoothAddressBox"
-                                    Grid.Row="1"
-                                    Header="设备蓝牙地址"
-                                    PlaceholderText="AA:BB:CC:DD:EE:FF" />
-                            </Grid>
+                            </StackPanel>
                         </Border>
-
-                        <InfoBar
-                            x:Name="WindowsResultInfo"
-                            IsClosable="False"
-                            IsOpen="False">
-                            <TextBlock
-                                x:Name="WindowsResultText"
-                                IsTextSelectionEnabled="True"
-                                TextWrapping="Wrap" />
-                        </InfoBar>
                     </StackPanel>
                 </ScrollViewer>
             </TabViewItem>
 
             <TabViewItem x:Name="MacTab" IsClosable="False">
                 <ScrollViewer
-                    MaxHeight="520"
+                    MaxHeight="650"
                     Padding="0,0,8,0"
                     VerticalScrollBarVisibility="Auto">
                     <StackPanel Padding="4,12,4,16" Spacing="14">
@@ -266,42 +294,43 @@
                                         <TextBlock x:Name="DecodeKeychainButtonText" Text="解析钥匙串内容" />
                                     </StackPanel>
                                 </Button>
+
+                                <InfoBar
+                                    x:Name="MacResultInfo"
+                                    IsClosable="False"
+                                    IsOpen="False">
+                                    <TextBlock
+                                        x:Name="MacResultText"
+                                        IsTextSelectionEnabled="True"
+                                        TextWrapping="Wrap" />
+                                </InfoBar>
+
+                                <Border
+                                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                    BorderThickness="0,1,0,0" />
+
+                                <StackPanel Spacing="8">
+                                    <TextBlock
+                                        x:Name="MacResultLabelText"
+                                        FontWeight="SemiBold"
+                                        Text="解析结果" />
+                                    <TextBox
+                                        x:Name="MacResultIrkBox"
+                                        FontFamily="Consolas"
+                                        IsReadOnly="True"
+                                        PlaceholderText="尚未解析出 IRK" />
+                                    <TextBlock
+                                        x:Name="MacPrivacyText"
+                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                        IsTextSelectionEnabled="True"
+                                        Text="内容仅在本机解析，不会上传或保存。"
+                                        TextWrapping="Wrap" />
+                                </StackPanel>
                             </StackPanel>
                         </Border>
-
-                        <InfoBar
-                            x:Name="MacResultInfo"
-                            IsClosable="False"
-                            IsOpen="False">
-                            <TextBlock
-                                x:Name="MacResultText"
-                                IsTextSelectionEnabled="True"
-                                TextWrapping="Wrap" />
-                        </InfoBar>
                     </StackPanel>
                 </ScrollViewer>
             </TabViewItem>
         </TabView>
-
-        <Border
-            Grid.Row="1"
-            Style="{StaticResource AssistantCardStyle}">
-            <StackPanel Spacing="8">
-                <TextBlock
-                    x:Name="ResultLabelText"
-                    FontWeight="SemiBold"
-                    Text="解析结果" />
-                <TextBox
-                    x:Name="ResultIrkBox"
-                    IsReadOnly="True"
-                    PlaceholderText="尚未解析出 IRK" />
-                <TextBlock
-                    x:Name="PrivacyText"
-                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                    IsTextSelectionEnabled="True"
-                    Text="内容仅在本机解析，不会上传或保存。"
-                    TextWrapping="Wrap" />
-            </StackPanel>
-        </Border>
     </Grid>
 </ContentDialog>

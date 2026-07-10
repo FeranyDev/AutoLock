@@ -96,7 +96,8 @@ public sealed partial class IrkAssistantDialog : ContentDialog
     private void SetIrk(string irk)
     {
         ResultIrk = IrkHelper.Normalize(irk);
-        ResultIrkBox.Text = ResultIrk;
+        WindowsResultIrkBox.Text = ResultIrk;
+        MacResultIrkBox.Text = ResultIrk;
         IsPrimaryButtonEnabled = IrkHelper.IsValidOrEmpty(ResultIrk) && !string.IsNullOrWhiteSpace(ResultIrk);
     }
 
@@ -137,8 +138,11 @@ public sealed partial class IrkAssistantDialog : ContentDialog
         KeychainContentBox.Header = App.State.T("IrkAssistantKeychainLabel");
         KeychainContentBox.PlaceholderText = App.State.T("IrkAssistantKeychainPlaceholder");
         DecodeKeychainButtonText.Text = App.State.T("IrkAssistantDecodeKeychain");
-        ResultLabelText.Text = App.State.T("IrkAssistantResultLabel");
-        ResultIrkBox.PlaceholderText = App.State.T("IrkAssistantNoResult");
-        PrivacyText.Text = App.State.T("IrkAssistantPrivacy");
+        WindowsResultLabelText.Text = App.State.T("IrkAssistantResultLabel");
+        MacResultLabelText.Text = App.State.T("IrkAssistantResultLabel");
+        WindowsResultIrkBox.PlaceholderText = App.State.T("IrkAssistantNoResult");
+        MacResultIrkBox.PlaceholderText = App.State.T("IrkAssistantNoResult");
+        WindowsPrivacyText.Text = App.State.T("IrkAssistantPrivacy");
+        MacPrivacyText.Text = App.State.T("IrkAssistantPrivacy");
     }
 }
