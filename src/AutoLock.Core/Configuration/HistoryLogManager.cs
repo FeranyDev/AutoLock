@@ -1,5 +1,6 @@
 using System.IO;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace AutoLock.Core;
 
@@ -7,9 +8,23 @@ public sealed record HistoryLogEntry(
     DateTimeOffset TimestampUtc,
     string Kind,
     string Title,
-    string Message)
+    string Message,
+    string? DeviceIdentityKind = null,
+    string? DeviceIdentity = null)
 {
+    [JsonIgnore]
     public string TimestampLocal => TimestampUtc.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss");
+
+    [JsonIgnore]
+    public string DisplayTitle => DeviceIdentityFormatter.MaskSensitiveText(Title);
+
+    [JsonIgnore]
+    public string DisplayMessage => DeviceIdentityFormatter.MaskSensitiveText(Message);
+
+    [JsonIgnore]
+    public string DeviceIdentityDisplay => string.IsNullOrWhiteSpace(DeviceIdentity)
+        ? string.Empty
+        : $"{DeviceIdentityKind}  {DeviceIdentity}";
 }
 
 public static class HistoryLogManager
@@ -41,10 +56,18 @@ public static class HistoryLogManager
         }
     }
 
-    public static void Append(string kind, string title, string message)
+    public static void Append(string kind, string title, string message, BindingConfig? binding = null)
     {
+        var identityKind = binding?.IdentityKind;
+        var identity = binding?.MaskedIdentity;
         var entries = Load()
-            .Prepend(new HistoryLogEntry(DateTimeOffset.UtcNow, kind, title, message))
+            .Prepend(new HistoryLogEntry(
+                DateTimeOffset.UtcNow,
+                kind,
+                title,
+                DeviceIdentityFormatter.MaskSensitiveText(message),
+                identityKind,
+                identity))
             .Take(MaxEntries)
             .ToList();
 

@@ -83,9 +83,18 @@ public sealed partial class ProtectionPage : Page
             DryRunSwitch.IsOn = App.State.Settings.DryRun;
             MissingSecondsBox.Value = binding?.MissingSeconds ?? App.State.Settings.MissingSeconds;
             MinRssiBox.Value = binding?.MinRssi ?? App.State.Settings.MinRssi;
-            BindingAddressText.Text = binding is null
+            BindingDeviceNameText.Text = binding is null
                 ? App.State.T("BindingNone")
-                : App.State.F("BindingLoaded", binding.DisplayAddress);
+                : string.IsNullOrWhiteSpace(binding.Name)
+                    ? App.State.T("BindingDeviceFallback")
+                    : binding.Name;
+            BindingIdentityPanel.Visibility = binding is null ? Visibility.Collapsed : Visibility.Visible;
+            if (binding is not null)
+            {
+                BindingIdentityKindText.Text = binding.IdentityKind;
+                BindingIdentityValueText.Text = binding.MaskedIdentity;
+                BindingIdentityIcon.Glyph = binding.UsesIrk ? "\uE8D7" : "\uE702";
+            }
             StartStopButton.IsEnabled = binding is not null;
             ClearBindingButton.IsEnabled = binding is not null;
             ApplyPauseButtonText();
@@ -104,12 +113,12 @@ public sealed partial class ProtectionPage : Page
         if (App.State.Monitor.IsMonitoring)
         {
             SetMonitoringUi(isMonitoring: true);
-            SetInfo(App.State.T("InfoMonitoringTitle"), App.State.F("InfoMonitoring", binding.DisplayAddress), InfoBarSeverity.Success);
+            SetInfo(App.State.T("InfoMonitoringTitle"), App.State.F("InfoMonitoring", binding.MaskedIdentity), InfoBarSeverity.Success);
             return;
         }
 
         SetMonitoringUi(isMonitoring: false);
-        SetInfo(App.State.T("StatusReady"), App.State.F("InfoReadyBound", binding.DisplayAddress), InfoBarSeverity.Informational);
+        SetInfo(App.State.T("StatusReady"), App.State.F("InfoReadyBound", binding.MaskedIdentity), InfoBarSeverity.Informational);
     }
 
     private void ScanDevicesButton_Click(object sender, RoutedEventArgs e)
@@ -130,7 +139,7 @@ public sealed partial class ProtectionPage : Page
         if (monitor.IsMonitoring)
         {
             monitor.StopMonitor();
-            HistoryLogManager.Append("Monitor", App.State.T("InfoStoppedTitle"), App.State.T("InfoStoppedMessage"));
+            HistoryLogManager.Append("Monitor", App.State.T("InfoStoppedTitle"), App.State.T("InfoStoppedMessage"), App.State.Binding);
             SetInfo(App.State.T("InfoStoppedTitle"), App.State.T("InfoStoppedMessage"), InfoBarSeverity.Informational);
             return;
         }
@@ -157,15 +166,15 @@ public sealed partial class ProtectionPage : Page
 
         var activeIrk = IrkHelper.Normalize(binding.Irk ?? string.Empty);
         monitor.StartMonitor(binding, activeIrk, BuildMonitorOptions(binding, minRssi, DryRunSwitch.IsOn));
-        HistoryLogManager.Append("Monitor", App.State.T("InfoMonitoringTitle"), App.State.F("InfoMonitoring", binding.DisplayAddress));
-        SetInfo(App.State.T("InfoMonitoringTitle"), App.State.F("InfoMonitoring", binding.DisplayAddress), InfoBarSeverity.Success);
+        HistoryLogManager.Append("Monitor", App.State.T("InfoMonitoringTitle"), App.State.F("InfoMonitoring", binding.MaskedIdentity), binding);
+        SetInfo(App.State.T("InfoMonitoringTitle"), App.State.F("InfoMonitoring", binding.MaskedIdentity), InfoBarSeverity.Success);
     }
 
     private void TestLockButton_Click(object sender, RoutedEventArgs e)
     {
         if (DryRunSwitch.IsOn)
         {
-            HistoryLogManager.Append("Lock", App.State.T("InfoDryRunTitle"), App.State.T("InfoDryRunMessage"));
+            HistoryLogManager.Append("Lock", App.State.T("InfoDryRunTitle"), App.State.T("InfoDryRunMessage"), App.State.Binding);
             SetInfo(App.State.T("InfoDryRunTitle"), App.State.T("InfoDryRunMessage"), InfoBarSeverity.Informational);
             return;
         }
@@ -173,13 +182,13 @@ public sealed partial class ProtectionPage : Page
         var result = LockService.LockWorkStation();
         if (result.Succeeded)
         {
-            HistoryLogManager.Append("Lock", App.State.T("InfoManualLockTitle"), App.State.T("InfoManualLockMessage"));
+            HistoryLogManager.Append("Lock", App.State.T("InfoManualLockTitle"), App.State.T("InfoManualLockMessage"), App.State.Binding);
             SetInfo(App.State.T("InfoManualLockTitle"), App.State.T("InfoManualLockMessage"), InfoBarSeverity.Success);
             return;
         }
 
         var message = result.ErrorMessage ?? result.ErrorCode.ToString();
-        HistoryLogManager.Append("Lock", App.State.T("InfoLockFailedTitle"), App.State.F("InfoLockFailed", message));
+        HistoryLogManager.Append("Lock", App.State.T("InfoLockFailedTitle"), App.State.F("InfoLockFailed", message), App.State.Binding);
         SetInfo(App.State.T("InfoLockFailedTitle"), App.State.F("InfoLockFailed", message), InfoBarSeverity.Error);
     }
 
@@ -196,13 +205,13 @@ public sealed partial class ProtectionPage : Page
 
         if (pauseUntil is null)
         {
-            HistoryLogManager.Append("Monitor", App.State.T("InfoPauseClearedTitle"), App.State.T("InfoPauseCleared"));
+            HistoryLogManager.Append("Monitor", App.State.T("InfoPauseClearedTitle"), App.State.T("InfoPauseCleared"), App.State.Binding);
             SetInfo(App.State.T("InfoPauseClearedTitle"), App.State.T("InfoPauseCleared"), InfoBarSeverity.Informational);
             return;
         }
 
         var localTime = pauseUntil.Value.ToLocalTime().ToString("T");
-        HistoryLogManager.Append("Monitor", App.State.T("InfoPausedTitle"), App.State.F("InfoPausedUntil", localTime));
+        HistoryLogManager.Append("Monitor", App.State.T("InfoPausedTitle"), App.State.F("InfoPausedUntil", localTime), App.State.Binding);
         SetInfo(App.State.T("InfoPausedTitle"), App.State.F("InfoPausedUntil", localTime), InfoBarSeverity.Informational);
     }
 
@@ -337,7 +346,8 @@ public sealed partial class ProtectionPage : Page
             SignalText.Text = e.IsIrkMatch
                 ? App.State.F("SignalSeenIrk", e.Sighting.Rssi)
                 : App.State.F("SignalSeenAddress", e.Sighting.Rssi);
-            SetInfo(App.State.T("InfoSeenTitle"), App.State.F("InfoSeenDevice", e.Sighting.DisplayAddress), InfoBarSeverity.Success);
+            var identity = App.State.Binding?.MaskedIdentity ?? DeviceIdentityFormatter.MaskMac(e.Sighting.Address);
+            SetInfo(App.State.T("InfoSeenTitle"), App.State.F("InfoSeenDevice", identity), InfoBarSeverity.Success);
         });
     }
 
@@ -360,7 +370,7 @@ public sealed partial class ProtectionPage : Page
     {
         Enqueue(() =>
         {
-            HistoryLogManager.Append("Lock", App.State.T("InfoDryRunTitle"), App.State.T("InfoDryRunMessage"));
+            HistoryLogManager.Append("Lock", App.State.T("InfoDryRunTitle"), App.State.T("InfoDryRunMessage"), App.State.Binding);
             SetInfo(App.State.T("InfoDryRunTitle"), App.State.T("InfoDryRunMessage"), InfoBarSeverity.Informational);
         });
     }
@@ -370,7 +380,7 @@ public sealed partial class ProtectionPage : Page
         Enqueue(() =>
         {
             var message = e.Result.ErrorMessage ?? e.Result.ErrorCode.ToString();
-            HistoryLogManager.Append("Lock", App.State.T("InfoLockFailedTitle"), App.State.F("InfoLockFailed", message));
+            HistoryLogManager.Append("Lock", App.State.T("InfoLockFailedTitle"), App.State.F("InfoLockFailed", message), App.State.Binding);
             SetInfo(App.State.T("InfoLockFailedTitle"), App.State.F("InfoLockFailed", message), InfoBarSeverity.Error);
         });
     }
@@ -379,7 +389,7 @@ public sealed partial class ProtectionPage : Page
     {
         Enqueue(() =>
         {
-            HistoryLogManager.Append("Lock", App.State.T("InfoLockedTitle"), App.State.T("InfoPausedAfterLock"));
+            HistoryLogManager.Append("Lock", App.State.T("InfoLockedTitle"), App.State.T("InfoPausedAfterLock"), App.State.Binding);
             SetInfo(App.State.T("InfoLockedTitle"), App.State.T("InfoPausedAfterLock"), InfoBarSeverity.Success);
         });
     }
@@ -401,7 +411,7 @@ public sealed partial class ProtectionPage : Page
                     App.State.F("InfoSuppressedPaused", e.UntilUtc?.ToLocalTime().ToString("T") ?? string.Empty))
             };
 
-            HistoryLogManager.Append("Monitor", title, message);
+            HistoryLogManager.Append("Monitor", title, message, App.State.Binding);
             SetInfo(title, message, InfoBarSeverity.Informational);
         });
     }

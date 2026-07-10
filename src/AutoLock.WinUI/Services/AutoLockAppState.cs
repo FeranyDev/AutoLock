@@ -32,7 +32,7 @@ public sealed class AutoLockAppState : IDisposable
         Binding = binding;
         if (logHistory)
         {
-            HistoryLogManager.Append("Binding", T("InfoBoundTitle"), F("InfoBound", binding.DisplayAddress));
+            HistoryLogManager.Append("Binding", T("InfoBoundTitle"), F("InfoBound", binding.MaskedIdentity), binding);
         }
 
         BindingChanged?.Invoke(this, EventArgs.Empty);
@@ -40,9 +40,10 @@ public sealed class AutoLockAppState : IDisposable
 
     public void ClearBinding()
     {
+        var previousBinding = Binding;
         BindingConfigManager.Delete();
         Binding = null;
-        HistoryLogManager.Append("Binding", T("InfoBindingClearedTitle"), T("InfoBindingCleared"));
+        HistoryLogManager.Append("Binding", T("InfoBindingClearedTitle"), T("InfoBindingCleared"), previousBinding);
         BindingChanged?.Invoke(this, EventArgs.Empty);
     }
 
@@ -64,9 +65,13 @@ public sealed class AutoLockAppState : IDisposable
         SaveSettings(Settings with { Language = WinUiLocalizer.NormalizeLanguage(language) });
     }
 
-    public void Notify(string title, string message, AppNotificationKind kind = AppNotificationKind.Information)
+    public void Notify(
+        string title,
+        string message,
+        AppNotificationKind kind = AppNotificationKind.Information,
+        BindingConfig? binding = null)
     {
-        HistoryLogManager.Append(kind.ToString(), title, message);
+        HistoryLogManager.Append(kind.ToString(), title, message, binding);
         NotificationRaised?.Invoke(this, new AppNotificationEventArgs(title, message, kind));
     }
 

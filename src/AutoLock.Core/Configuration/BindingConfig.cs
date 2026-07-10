@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace AutoLock.Core;
 
 public sealed record BindingConfig(
@@ -11,5 +13,15 @@ public sealed record BindingConfig(
     int? MinRssi,
     string? Irk)
 {
+    [JsonIgnore]
     public string DisplayAddress => AddressFormatter.Display(Address);
+
+    [JsonIgnore]
+    public bool UsesIrk => DeviceIdentityFormatter.UsesIrk(this);
+
+    [JsonIgnore]
+    public string IdentityKind => DeviceIdentityFormatter.GetKind(this);
+
+    [JsonIgnore]
+    public string MaskedIdentity => DeviceIdentityFormatter.Mask(this);
 }

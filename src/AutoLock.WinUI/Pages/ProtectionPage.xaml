@@ -12,7 +12,7 @@
             <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
             <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="CornerRadius" Value="{ThemeResource OverlayCornerRadius}" />
         </Style>
         <Style x:Key="MutedTextStyle" TargetType="TextBlock">
             <Setter Property="Foreground" Value="{ThemeResource TextFillColorSecondaryBrush}" />
@@ -76,9 +76,36 @@
                             FontWeight="SemiBold"
                             Text="当前保护" />
                         <TextBlock
-                            x:Name="BindingAddressText"
+                            x:Name="BindingDeviceNameText"
                             Style="{StaticResource MutedTextStyle}"
                             Text="正在加载绑定设备" />
+                        <StackPanel
+                            x:Name="BindingIdentityPanel"
+                            Orientation="Horizontal"
+                            Spacing="10">
+                            <Border
+                                Padding="8,4"
+                                Background="{ThemeResource SystemFillColorSolidNeutralBackgroundBrush}"
+                                CornerRadius="4">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <FontIcon
+                                        x:Name="BindingIdentityIcon"
+                                        FontSize="12"
+                                        Glyph="&#xE702;" />
+                                    <TextBlock
+                                        x:Name="BindingIdentityKindText"
+                                        FontSize="12"
+                                        FontWeight="SemiBold"
+                                        Text="MAC" />
+                                </StackPanel>
+                            </Border>
+                            <TextBlock
+                                x:Name="BindingIdentityValueText"
+                                FontFamily="Consolas"
+                                FontWeight="SemiBold"
+                                Text="AA:BB:**:**:EE:FF"
+                                VerticalAlignment="Center" />
+                        </StackPanel>
                         <Border
                             Padding="12,8"
                             HorizontalAlignment="Left"

@@ -166,7 +166,7 @@ public sealed partial class MainWindow : Window
 
         if (!IrkHelper.IsValidOrEmpty(binding.Irk ?? string.Empty))
         {
-            App.State.Notify(App.State.T("InfoIrkInvalidTitle"), App.State.T("InfoIrkInvalid"), AppNotificationKind.Warning);
+            App.State.Notify(App.State.T("InfoIrkInvalidTitle"), App.State.T("InfoIrkInvalid"), AppNotificationKind.Warning, binding);
             return;
         }
 
@@ -175,17 +175,17 @@ public sealed partial class MainWindow : Window
         if (string.IsNullOrWhiteSpace(irk))
         {
             App.State.Monitor.StartMonitor(binding, irk, BuildMonitorOptions(binding, minRssi, dryRun: false));
-            App.State.Notify(App.State.T("InfoAutoMonitoringTitle"), App.State.F("InfoAutoMonitoring", binding.DisplayAddress), AppNotificationKind.Success);
+            App.State.Notify(App.State.T("InfoAutoMonitoringTitle"), App.State.F("InfoAutoMonitoring", binding.MaskedIdentity), AppNotificationKind.Success, binding);
             return;
         }
 
         var scanSeconds = Math.Clamp(binding.MissingSeconds > 0 ? Math.Min(binding.MissingSeconds, 8) : 8, 3, 15);
 
-        App.State.Notify(App.State.T("InfoAutoScanTitle"), App.State.F("InfoAutoScan", scanSeconds));
+        App.State.Notify(App.State.T("InfoAutoScanTitle"), App.State.F("InfoAutoScan", scanSeconds), binding: binding);
         var sighting = await App.State.Monitor.ScanForIrkMatchAsync(irk, TimeSpan.FromSeconds(scanSeconds), minRssi);
         if (sighting is null || App.State.Monitor.IsMonitoring)
         {
-            App.State.Notify(App.State.T("InfoAutoNoMatchTitle"), App.State.T("InfoAutoNoMatch"), AppNotificationKind.Warning);
+            App.State.Notify(App.State.T("InfoAutoNoMatchTitle"), App.State.T("InfoAutoNoMatch"), AppNotificationKind.Warning, binding);
             return;
         }
 
@@ -197,7 +197,7 @@ public sealed partial class MainWindow : Window
         };
         App.State.SaveBinding(binding);
         App.State.Monitor.StartMonitor(binding, irk, BuildMonitorOptions(binding, minRssi, dryRun: false));
-        App.State.Notify(App.State.T("InfoAutoMonitoringTitle"), App.State.F("InfoAutoMonitoring", sighting.DisplayAddress), AppNotificationKind.Success);
+        App.State.Notify(App.State.T("InfoAutoMonitoringTitle"), App.State.F("InfoAutoMonitoring", binding.MaskedIdentity), AppNotificationKind.Success, binding);
     }
 
     private void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
@@ -227,7 +227,7 @@ public sealed partial class MainWindow : Window
         {
             if (monitor.IsMonitoring)
             {
-                App.State.Notify(App.State.T("InfoUnlockTitle"), App.State.T("InfoUnlockReset"), AppNotificationKind.Information);
+                App.State.Notify(App.State.T("InfoUnlockTitle"), App.State.T("InfoUnlockReset"), AppNotificationKind.Information, App.State.Binding);
             }
 
             return;
@@ -241,20 +241,20 @@ public sealed partial class MainWindow : Window
         var binding = App.State.Binding;
         if (binding is null)
         {
-            App.State.Notify(App.State.T("InfoResumeFailedTitle"), App.State.T("InfoResumeFailed"), AppNotificationKind.Warning);
+            App.State.Notify(App.State.T("InfoResumeFailedTitle"), App.State.T("InfoResumeFailed"), AppNotificationKind.Warning, binding);
             return;
         }
 
         var irk = IrkHelper.Normalize(binding.Irk ?? string.Empty);
         if (!IrkHelper.IsValidOrEmpty(irk))
         {
-            App.State.Notify(App.State.T("InfoIrkInvalidTitle"), App.State.T("InfoIrkInvalid"), AppNotificationKind.Warning);
+            App.State.Notify(App.State.T("InfoIrkInvalidTitle"), App.State.T("InfoIrkInvalid"), AppNotificationKind.Warning, binding);
             return;
         }
 
         var minRssi = binding.MinRssi ?? -90;
         _resumeScanInProgress = true;
-        App.State.Notify(App.State.T("InfoResumeWaitingTitle"), App.State.T("InfoResumeWaiting"), AppNotificationKind.Information);
+        App.State.Notify(App.State.T("InfoResumeWaitingTitle"), App.State.T("InfoResumeWaiting"), AppNotificationKind.Information, binding);
 
         try
         {
@@ -267,7 +267,7 @@ public sealed partial class MainWindow : Window
             var currentBinding = App.State.Binding;
             if (currentBinding is null)
             {
-                App.State.Notify(App.State.T("InfoResumeFailedTitle"), App.State.T("InfoResumeFailed"), AppNotificationKind.Warning);
+                App.State.Notify(App.State.T("InfoResumeFailedTitle"), App.State.T("InfoResumeFailed"), AppNotificationKind.Warning, currentBinding);
                 return;
             }
 
@@ -280,7 +280,7 @@ public sealed partial class MainWindow : Window
 
             App.State.SaveBinding(resumedBinding);
             monitor.StartMonitor(resumedBinding, irk, BuildMonitorOptions(resumedBinding, minRssi, dryRun: false));
-            App.State.Notify(App.State.T("InfoResumeTitle"), App.State.T("InfoResume"), AppNotificationKind.Success);
+            App.State.Notify(App.State.T("InfoResumeTitle"), App.State.T("InfoResume"), AppNotificationKind.Success, resumedBinding);
         }
         finally
         {

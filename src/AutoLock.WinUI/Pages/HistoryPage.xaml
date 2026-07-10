@@ -9,7 +9,7 @@
     mc:Ignorable="d">
 
     <Grid
-        MaxWidth="920"
+        MaxWidth="1080"
         Padding="40,28,40,40"
         HorizontalAlignment="Center"
         RowSpacing="20">
@@ -74,34 +74,68 @@
             Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
             BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
             BorderThickness="1"
-            CornerRadius="8">
+            CornerRadius="{ThemeResource OverlayCornerRadius}">
             <ListView
                 x:Name="HistoryList"
                 MinHeight="420"
                 SelectionMode="None">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        <Setter Property="Padding" Value="0" />
+                    </Style>
+                </ListView.ItemContainerStyle>
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="core:HistoryLogEntry">
-                        <Grid Padding="18,12" ColumnSpacing="16">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="160" />
-                                <ColumnDefinition Width="110" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock
-                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                Text="{x:Bind TimestampLocal}" />
-                            <TextBlock
-                                Grid.Column="1"
-                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                Text="{x:Bind Kind}" />
-                            <StackPanel Grid.Column="2" Spacing="3">
-                                <TextBlock FontWeight="SemiBold" Text="{x:Bind Title}" />
+                        <Border
+                            BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}"
+                            BorderThickness="0,0,0,1">
+                            <Grid Padding="18,14" ColumnSpacing="16">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150" />
+                                    <ColumnDefinition Width="96" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
                                 <TextBlock
                                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                    Text="{x:Bind Message}"
-                                    TextWrapping="WrapWholeWords" />
-                            </StackPanel>
-                        </Grid>
+                                    Text="{x:Bind TimestampLocal}"
+                                    VerticalAlignment="Top" />
+                                <Border
+                                    Grid.Column="1"
+                                    Padding="8,4"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Top"
+                                    Background="{ThemeResource SystemFillColorSolidNeutralBackgroundBrush}"
+                                    CornerRadius="4">
+                                    <TextBlock
+                                        FontSize="12"
+                                        FontWeight="SemiBold"
+                                        Text="{x:Bind Kind}" />
+                                </Border>
+                                <StackPanel Grid.Column="2" Spacing="5">
+                                    <Grid ColumnSpacing="14">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock
+                                            FontWeight="SemiBold"
+                                            Text="{x:Bind DisplayTitle}"
+                                            TextTrimming="CharacterEllipsis" />
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                                            FontFamily="Consolas"
+                                            FontSize="12"
+                                            Text="{x:Bind DeviceIdentityDisplay}" />
+                                    </Grid>
+                                    <TextBlock
+                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                        Text="{x:Bind DisplayMessage}"
+                                        TextWrapping="WrapWholeWords" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>

@@ -118,7 +118,7 @@ public sealed partial class ScanDevicesPage : Page
             Irk: irk);
 
         App.State.SaveBinding(binding);
-        SetInfo(App.State.T("InfoBoundTitle"), App.State.F("InfoBound", selected.DisplayAddress), InfoBarSeverity.Success);
+        SetInfo(App.State.T("InfoBoundTitle"), App.State.F("InfoBound", binding.MaskedIdentity), InfoBarSeverity.Success);
     }
 
     private void Monitor_ScanDeviceSeen(object? sender, DeviceSightingEventArgs e)
