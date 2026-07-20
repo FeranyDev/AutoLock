@@ -73,6 +73,7 @@
             x:Name="IrkExpander"
             Grid.Row="2"
             HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Stretch"
             IsExpanded="False">
             <Expander.Header>
                 <Grid MinHeight="54" ColumnSpacing="14">
@@ -94,7 +95,11 @@
                     </StackPanel>
                 </Grid>
             </Expander.Header>
-            <Grid Padding="4,8,4,18" ColumnSpacing="12">
+            <Grid
+                MaxWidth="820"
+                Padding="4,8,4,18"
+                HorizontalAlignment="Stretch"
+                ColumnSpacing="12">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
