@@ -10,6 +10,7 @@ public sealed partial class ScanDevicesPage : Page
 {
     private readonly ObservableCollection<DeviceSighting> _devices = new();
     private bool _eventsSubscribed;
+    private bool _isBusy;
 
     public ScanDevicesPage()
     {
@@ -23,7 +24,6 @@ public sealed partial class ScanDevicesPage : Page
     {
         SubscribeMonitorEvents();
         ApplyText();
-        ScanSecondsBox.Value = App.State.Settings.ScanSeconds;
         SetInfo(App.State.T("StatusReady"), App.State.T("InfoScanReady"), InfoBarSeverity.Informational);
     }
 
@@ -58,13 +58,13 @@ public sealed partial class ScanDevicesPage : Page
 
     private async void ScanButton_Click(object sender, RoutedEventArgs e)
     {
-        if (!TryReadScanSeconds(out var scanSeconds) || !TryReadIrk(out var irk))
+        if (!TryReadIrk(out var irk))
         {
             return;
         }
 
+        var scanSeconds = Math.Clamp(App.State.Settings.ScanSeconds, 1, 3600);
         _devices.Clear();
-        App.State.SaveSettings(App.State.Settings with { ScanSeconds = scanSeconds });
         SetBusy(true);
         SetInfo(App.State.T("InfoScanningTitle"), App.State.F("InfoScanning", scanSeconds), InfoBarSeverity.Informational);
 
@@ -138,17 +138,9 @@ public sealed partial class ScanDevicesPage : Page
         existing.UpdateFrom(sighting);
     }
 
-    private bool TryReadScanSeconds(out int seconds)
+    private void DevicesList_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        seconds = 0;
-        if (double.IsNaN(ScanSecondsBox.Value) || ScanSecondsBox.Value < 1)
-        {
-            SetInfo(App.State.T("InfoInvalidTitle"), App.State.T("InfoScanSecondsInvalid"), InfoBarSeverity.Warning);
-            return false;
-        }
-
-        seconds = (int)Math.Round(ScanSecondsBox.Value);
-        return true;
+        BindSelectedButton.IsEnabled = !_isBusy && DevicesList.SelectedItem is DeviceSighting;
     }
 
     private bool TryReadIrk(out string irk)
@@ -165,8 +157,9 @@ public sealed partial class ScanDevicesPage : Page
 
     private void SetBusy(bool isBusy)
     {
+        _isBusy = isBusy;
         ScanButton.IsEnabled = !isBusy;
-        BindSelectedButton.IsEnabled = !isBusy;
+        BindSelectedButton.IsEnabled = !isBusy && DevicesList.SelectedItem is DeviceSighting;
         IrkAssistantButton.IsEnabled = !isBusy;
     }
 
@@ -198,8 +191,9 @@ public sealed partial class ScanDevicesPage : Page
     {
         PageTitleText.Text = App.State.T("NavScanDevices");
         PageSubtitleText.Text = App.State.T("PageScanSubtitle");
-        ScanSecondsBox.Header = App.State.T("LabelScanSeconds");
-        IrkBox.Header = App.State.T("LabelIrk");
+        ScanDurationText.Text = App.State.F("ScanDurationSummary", Math.Clamp(App.State.Settings.ScanSeconds, 1, 3600));
+        IrkSectionTitleText.Text = App.State.T("SectionIrkAdvanced");
+        IrkSectionHelpText.Text = App.State.T("HelpIrkGeneral");
         IrkBox.PlaceholderText = App.State.T("PlaceholderIrk");
         IrkAssistantButtonText.Text = App.State.T("ButtonGetIrk");
         ScanButtonText.Text = App.State.T("ButtonScan");

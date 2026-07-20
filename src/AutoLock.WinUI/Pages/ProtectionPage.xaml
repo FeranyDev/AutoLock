@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Page
+    x:Name="RootPage"
     x:Class="AutoLock_WinUI.Pages.ProtectionPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -7,84 +8,71 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Page.Resources>
-        <Style x:Key="CardBorderStyle" TargetType="Border">
-            <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
-            <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="CornerRadius" Value="{ThemeResource OverlayCornerRadius}" />
-        </Style>
-        <Style x:Key="MutedTextStyle" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="{ThemeResource TextFillColorSecondaryBrush}" />
-            <Setter Property="TextWrapping" Value="WrapWholeWords" />
-        </Style>
-        <Style x:Key="IconTileStyle" TargetType="Border">
-            <Setter Property="Width" Value="40" />
-            <Setter Property="Height" Value="40" />
-            <Setter Property="CornerRadius" Value="20" />
-        </Style>
-    </Page.Resources>
-
     <ScrollViewer
+        HorizontalContentAlignment="Center"
         HorizontalScrollBarVisibility="Disabled"
         VerticalScrollBarVisibility="Auto">
         <Grid
-            MaxWidth="1180"
-            Padding="40,30,40,40"
+            MaxWidth="1080"
+            Width="{Binding ActualWidth, ElementName=RootPage}"
+            Padding="36,28,36,40"
             HorizontalAlignment="Center"
-            RowSpacing="20">
+            RowSpacing="18">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <StackPanel Spacing="8">
+            <StackPanel Spacing="6">
                 <TextBlock
                     x:Name="PageTitleText"
                     Style="{StaticResource TitleTextBlockStyle}"
-                    Text="保护设置" />
+                    Text="保护" />
                 <TextBlock
                     x:Name="PageSubtitleText"
-                    Style="{StaticResource MutedTextStyle}"
+                    Style="{StaticResource PageSubtitleTextBlockStyle}"
                     Text="绑定的蓝牙设备离开后自动锁定 Windows" />
             </StackPanel>
 
             <Border
                 Grid.Row="1"
                 Padding="24"
-                Style="{StaticResource CardBorderStyle}">
-                <Grid ColumnSpacing="18">
+                Style="{StaticResource SettingsCardStyle}">
+                <Grid ColumnSpacing="20">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <Border Background="{ThemeResource SystemFillColorAttentionBackgroundBrush}" Style="{StaticResource IconTileStyle}">
+                    <Border
+                        Background="{ThemeResource AccentFillColorTertiaryBrush}"
+                        Style="{StaticResource IconBadgeBorderStyle}">
                         <FontIcon
                             Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-                            FontSize="19"
+                            FontSize="18"
                             Glyph="&#xE72E;" />
                     </Border>
 
-                    <StackPanel Grid.Column="1" Spacing="7" VerticalAlignment="Center">
+                    <StackPanel Grid.Column="1" Spacing="6">
                         <TextBlock
                             x:Name="CurrentProtectionTitleText"
-                            FontSize="18"
-                            FontWeight="SemiBold"
+                            Style="{StaticResource SectionTitleTextBlockStyle}"
                             Text="当前保护" />
                         <TextBlock
                             x:Name="BindingDeviceNameText"
-                            Style="{StaticResource MutedTextStyle}"
+                            FontSize="16"
+                            FontWeight="SemiBold"
                             Text="正在加载绑定设备" />
                         <StackPanel
                             x:Name="BindingIdentityPanel"
                             Orientation="Horizontal"
                             Spacing="10">
                             <Border
-                                Padding="8,4"
+                                Padding="8,3"
                                 Background="{ThemeResource SystemFillColorSolidNeutralBackgroundBrush}"
                                 CornerRadius="4">
                                 <StackPanel Orientation="Horizontal" Spacing="6">
@@ -102,34 +90,27 @@
                             <TextBlock
                                 x:Name="BindingIdentityValueText"
                                 FontFamily="Consolas"
+                                FontSize="13"
                                 FontWeight="SemiBold"
                                 Text="AA:BB:**:**:EE:FF"
                                 VerticalAlignment="Center" />
                         </StackPanel>
-                        <Border
-                            Padding="12,8"
-                            HorizontalAlignment="Left"
-                            Background="{ThemeResource SystemFillColorSolidNeutralBackgroundBrush}"
-                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                            BorderThickness="1"
-                            CornerRadius="8">
-                            <StackPanel Orientation="Horizontal" Spacing="8">
-                                <FontIcon
-                                    FontSize="14"
-                                    Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-                                    Glyph="&#xE946;" />
-                                <TextBlock
-                                    x:Name="SignalText"
-                                    FontWeight="SemiBold"
-                                    Text="空闲"
-                                    VerticalAlignment="Center" />
-                            </StackPanel>
-                        </Border>
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <Ellipse
+                                Width="8"
+                                Height="8"
+                                Fill="{ThemeResource SystemFillColorSuccessBrush}"
+                                VerticalAlignment="Center" />
+                            <TextBlock
+                                x:Name="SignalText"
+                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                Text="空闲" />
+                        </StackPanel>
                     </StackPanel>
 
                     <StackPanel
                         Grid.Column="2"
-                        MinWidth="190"
+                        MinWidth="176"
                         Spacing="10"
                         VerticalAlignment="Center">
                         <Button
@@ -148,7 +129,7 @@
                             HorizontalAlignment="Stretch">
                             <StackPanel Orientation="Horizontal" Spacing="8">
                                 <FontIcon Glyph="&#xEC50;" />
-                                <TextBlock x:Name="ScanDevicesButtonText" Text="扫描设备" />
+                                <TextBlock x:Name="ScanDevicesButtonText" Text="选择设备" />
                             </StackPanel>
                         </Button>
                     </StackPanel>
@@ -164,36 +145,31 @@
                 Title="就绪"
                 Message="已加载绑定设备，当前未开始监控。" />
 
-            <Grid Grid.Row="3" ColumnSpacing="20">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="360" />
-                </Grid.ColumnDefinitions>
+            <StackPanel Grid.Row="3" Spacing="10">
+                <TextBlock
+                    x:Name="RulesSectionText"
+                    Style="{StaticResource SectionTitleTextBlockStyle}"
+                    Text="保护规则" />
 
-                <Border Padding="26" Style="{StaticResource CardBorderStyle}">
-                    <StackPanel Spacing="0">
-                        <TextBlock
-                            x:Name="RulesSectionText"
-                            Margin="0,0,0,18"
-                            FontSize="18"
-                            FontWeight="SemiBold"
-                            Text="保护设置" />
-
-                        <Grid Padding="0,0,0,18" ColumnSpacing="18">
+                <Border Style="{StaticResource SettingsCardStyle}">
+                    <StackPanel>
+                        <Grid Padding="20,16" ColumnSpacing="18">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="150" />
                             </Grid.ColumnDefinitions>
-                            <Border Background="{ThemeResource SystemFillColorAttentionBackgroundBrush}" Style="{StaticResource IconTileStyle}">
+                            <Border
+                                Background="{ThemeResource AccentFillColorTertiaryBrush}"
+                                Style="{StaticResource IconBadgeBorderStyle}">
                                 <FontIcon
                                     Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-                                    FontSize="18"
+                                    FontSize="17"
                                     Glyph="&#xE121;" />
                             </Border>
                             <StackPanel Grid.Column="1" Spacing="3" VerticalAlignment="Center">
-                                <TextBlock x:Name="ScanSecondsTitleText" FontWeight="SemiBold" Text="扫描间隔" />
-                                <TextBlock x:Name="ScanSecondsHelpText" Style="{StaticResource MutedTextStyle}" Text="多久扫描一次附近设备" />
+                                <TextBlock x:Name="ScanSecondsTitleText" Style="{StaticResource SettingRowTitleTextBlockStyle}" Text="扫描间隔" />
+                                <TextBlock x:Name="ScanSecondsHelpText" Style="{StaticResource SettingRowDescriptionTextBlockStyle}" Text="多久扫描一次附近设备" />
                             </StackPanel>
                             <NumberBox
                                 x:Name="ScanSecondsBox"
@@ -201,26 +177,29 @@
                                 Minimum="1"
                                 SpinButtonPlacementMode="Inline"
                                 ValueChanged="ProtectionNumberBox_ValueChanged"
-                                Value="8" />
+                                Value="8"
+                                VerticalAlignment="Center" />
                         </Grid>
 
-                        <Rectangle Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" />
+                        <Rectangle Height="1" Margin="20,0" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" />
 
-                        <Grid Padding="0,18" ColumnSpacing="18">
+                        <Grid Padding="20,16" ColumnSpacing="18">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="150" />
                             </Grid.ColumnDefinitions>
-                            <Border Background="{ThemeResource SystemFillColorCautionBackgroundBrush}" Style="{StaticResource IconTileStyle}">
+                            <Border
+                                Background="{ThemeResource SystemFillColorCautionBackgroundBrush}"
+                                Style="{StaticResource IconBadgeBorderStyle}">
                                 <FontIcon
                                     Foreground="{ThemeResource SystemFillColorCautionBrush}"
-                                    FontSize="18"
+                                    FontSize="17"
                                     Glyph="&#xE916;" />
                             </Border>
                             <StackPanel Grid.Column="1" Spacing="3" VerticalAlignment="Center">
-                                <TextBlock x:Name="MissingSecondsTitleText" FontWeight="SemiBold" Text="消失秒数" />
-                                <TextBlock x:Name="MissingSecondsHelpText" Style="{StaticResource MutedTextStyle}" Text="超过这个时间没有收到目标信号后锁定 Windows。" />
+                                <TextBlock x:Name="MissingSecondsTitleText" Style="{StaticResource SettingRowTitleTextBlockStyle}" Text="消失超时" />
+                                <TextBlock x:Name="MissingSecondsHelpText" Style="{StaticResource SettingRowDescriptionTextBlockStyle}" Text="超过这个时间没有收到目标信号后锁定 Windows。" />
                             </StackPanel>
                             <NumberBox
                                 x:Name="MissingSecondsBox"
@@ -228,26 +207,29 @@
                                 Minimum="1"
                                 SpinButtonPlacementMode="Inline"
                                 ValueChanged="ProtectionNumberBox_ValueChanged"
-                                Value="30" />
+                                Value="30"
+                                VerticalAlignment="Center" />
                         </Grid>
 
-                        <Rectangle Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" />
+                        <Rectangle Height="1" Margin="20,0" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" />
 
-                        <Grid Padding="0,18" ColumnSpacing="18">
+                        <Grid Padding="20,16" ColumnSpacing="18">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="150" />
                             </Grid.ColumnDefinitions>
-                            <Border Background="{ThemeResource SystemFillColorSuccessBackgroundBrush}" Style="{StaticResource IconTileStyle}">
+                            <Border
+                                Background="{ThemeResource SystemFillColorSuccessBackgroundBrush}"
+                                Style="{StaticResource IconBadgeBorderStyle}">
                                 <FontIcon
                                     Foreground="{ThemeResource SystemFillColorSuccessBrush}"
-                                    FontSize="18"
+                                    FontSize="17"
                                     Glyph="&#xEC3F;" />
                             </Border>
                             <StackPanel Grid.Column="1" Spacing="3" VerticalAlignment="Center">
-                                <TextBlock x:Name="MinRssiTitleText" FontWeight="SemiBold" Text="最低信号" />
-                                <TextBlock x:Name="MinRssiHelpText" Style="{StaticResource MutedTextStyle}" Text="低于该 dBm 的广播会被视为弱信号并忽略。" />
+                                <TextBlock x:Name="MinRssiTitleText" Style="{StaticResource SettingRowTitleTextBlockStyle}" Text="最低信号" />
+                                <TextBlock x:Name="MinRssiHelpText" Style="{StaticResource SettingRowDescriptionTextBlockStyle}" Text="低于该 dBm 的广播会被视为弱信号并忽略。" />
                             </StackPanel>
                             <NumberBox
                                 x:Name="MinRssiBox"
@@ -256,26 +238,29 @@
                                 Minimum="-120"
                                 SpinButtonPlacementMode="Inline"
                                 ValueChanged="ProtectionNumberBox_ValueChanged"
-                                Value="-90" />
+                                Value="-90"
+                                VerticalAlignment="Center" />
                         </Grid>
 
-                        <Rectangle Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" />
+                        <Rectangle Height="1" Margin="20,0" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" />
 
-                        <Grid Padding="0,18,0,0" ColumnSpacing="18">
+                        <Grid Padding="20,16" ColumnSpacing="18">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <Border Background="{ThemeResource SystemFillColorCautionBackgroundBrush}" Style="{StaticResource IconTileStyle}">
+                            <Border
+                                Background="{ThemeResource SystemFillColorCautionBackgroundBrush}"
+                                Style="{StaticResource IconBadgeBorderStyle}">
                                 <FontIcon
                                     Foreground="{ThemeResource SystemFillColorCautionBrush}"
-                                    FontSize="18"
-                                    Glyph="&#xE72E;" />
+                                    FontSize="17"
+                                    Glyph="&#xE7BA;" />
                             </Border>
                             <StackPanel Grid.Column="1" Spacing="3" VerticalAlignment="Center">
-                                <TextBlock x:Name="DryRunTitleText" FontWeight="SemiBold" Text="测试模式，不锁定" />
-                                <TextBlock x:Name="DryRunHelpText" Style="{StaticResource MutedTextStyle}" Text="验证检测逻辑时只显示提示。" />
+                                <TextBlock x:Name="DryRunTitleText" Style="{StaticResource SettingRowTitleTextBlockStyle}" Text="测试模式，不锁定" />
+                                <TextBlock x:Name="DryRunHelpText" Style="{StaticResource SettingRowDescriptionTextBlockStyle}" Text="验证检测逻辑时只显示提示。" />
                             </StackPanel>
                             <ToggleSwitch
                                 x:Name="DryRunSwitch"
@@ -285,23 +270,27 @@
                         </Grid>
                     </StackPanel>
                 </Border>
+            </StackPanel>
 
-                <Border
-                    Grid.Column="1"
-                    Padding="24"
-                    Style="{StaticResource CardBorderStyle}">
-                    <StackPanel Spacing="16">
-                        <TextBlock
-                            x:Name="ActionsSectionText"
-                            FontSize="18"
-                            FontWeight="SemiBold"
-                            Text="操作" />
+            <StackPanel Grid.Row="4" Spacing="10">
+                <StackPanel Spacing="3">
+                    <TextBlock
+                        x:Name="ActionsSectionText"
+                        Style="{StaticResource SectionTitleTextBlockStyle}"
+                        Text="更多操作" />
+                    <TextBlock
+                        x:Name="ActionsHelpText"
+                        Style="{StaticResource SettingRowDescriptionTextBlockStyle}"
+                        Text="临时暂停、测试锁定或管理当前绑定。" />
+                </StackPanel>
 
-                        <TextBlock
-                            x:Name="ActionsHelpText"
-                            Style="{StaticResource MutedTextStyle}"
-                            Text="临时暂停、测试锁定或管理当前绑定。" />
-
+                <Border Padding="18" Style="{StaticResource SettingsCardStyle}">
+                    <Grid ColumnSpacing="12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
                         <Button
                             x:Name="PauseButton"
                             Click="PauseButton_Click"
@@ -311,9 +300,9 @@
                                 <TextBlock x:Name="PauseButtonText" Text="暂停 15 分钟" />
                             </StackPanel>
                         </Button>
-
                         <Button
                             x:Name="TestLockButton"
+                            Grid.Column="1"
                             Click="TestLockButton_Click"
                             HorizontalAlignment="Stretch">
                             <StackPanel Orientation="Horizontal" Spacing="8">
@@ -321,11 +310,9 @@
                                 <TextBlock x:Name="TestLockButtonText" Text="测试锁定" />
                             </StackPanel>
                         </Button>
-
-                        <Rectangle Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" />
-
                         <Button
                             x:Name="ClearBindingButton"
+                            Grid.Column="2"
                             Click="ClearBindingButton_Click"
                             HorizontalAlignment="Stretch">
                             <StackPanel Orientation="Horizontal" Spacing="8">
@@ -333,9 +320,9 @@
                                 <TextBlock x:Name="ClearBindingButtonText" Text="解绑当前设备" />
                             </StackPanel>
                         </Button>
-                    </StackPanel>
+                    </Grid>
                 </Border>
-            </Grid>
+            </StackPanel>
         </Grid>
     </ScrollViewer>
 </Page>

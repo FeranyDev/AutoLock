@@ -12,7 +12,34 @@
             </ResourceDictionary.MergedDictionaries>
             <!-- Includes the dialog chrome and its built-in horizontal padding. -->
             <x:Double x:Key="ContentDialogMaxWidth">920</x:Double>
-            <!-- Other app resources here -->
+            <Style x:Key="PageSubtitleTextBlockStyle" TargetType="TextBlock">
+                <Setter Property="Foreground" Value="{ThemeResource TextFillColorSecondaryBrush}" />
+                <Setter Property="TextWrapping" Value="WrapWholeWords" />
+            </Style>
+            <Style x:Key="SectionTitleTextBlockStyle" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontWeight" Value="SemiBold" />
+            </Style>
+            <Style x:Key="SettingRowTitleTextBlockStyle" TargetType="TextBlock">
+                <Setter Property="FontWeight" Value="SemiBold" />
+                <Setter Property="TextWrapping" Value="WrapWholeWords" />
+            </Style>
+            <Style x:Key="SettingRowDescriptionTextBlockStyle" TargetType="TextBlock">
+                <Setter Property="Foreground" Value="{ThemeResource TextFillColorSecondaryBrush}" />
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="TextWrapping" Value="WrapWholeWords" />
+            </Style>
+            <Style x:Key="SettingsCardStyle" TargetType="Border">
+                <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
+                <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="CornerRadius" Value="8" />
+            </Style>
+            <Style x:Key="IconBadgeBorderStyle" TargetType="Border">
+                <Setter Property="Width" Value="40" />
+                <Setter Property="Height" Value="40" />
+                <Setter Property="CornerRadius" Value="20" />
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

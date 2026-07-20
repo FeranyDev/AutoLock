@@ -43,6 +43,8 @@ public sealed partial class AboutPage : Page
     {
         PageTitleText.Text = App.State.T("NavAbout");
         PageSubtitleText.Text = App.State.T("PageAboutSubtitle");
+        ProductSubtitleText.Text = App.State.T("AppSubtitle");
+        DiagnosticsSectionText.Text = App.State.T("AboutSectionDiagnostics");
         VersionTitleText.Text = App.State.T("LabelVersion");
         DataDirTitleText.Text = App.State.T("LabelDataDirectory");
         BindingPathTitleText.Text = App.State.T("LabelBindingConfig");

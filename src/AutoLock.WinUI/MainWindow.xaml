@@ -67,6 +67,8 @@
                         <FontIcon Glyph="&#xE81C;" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
+            </NavigationView.MenuItems>
+            <NavigationView.FooterMenuItems>
                 <NavigationViewItem
                     x:Name="AboutNavItem"
                     Content="关于"
@@ -75,8 +77,6 @@
                         <FontIcon Glyph="&#xE946;" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-            </NavigationView.MenuItems>
-            <NavigationView.FooterMenuItems>
                 <NavigationViewItem
                     x:Name="SettingsNavItem"
                     Content="设置"

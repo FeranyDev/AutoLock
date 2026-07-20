@@ -459,7 +459,7 @@ public sealed partial class ProtectionPage : Page
         PageTitleText.Text = App.State.T("NavProtection");
         PageSubtitleText.Text = App.State.T("PageProtectionSubtitle");
         CurrentProtectionTitleText.Text = App.State.T("SectionCurrentProtection");
-        ScanDevicesButtonText.Text = App.State.T("NavScanDevices");
+        ScanDevicesButtonText.Text = App.State.T("ButtonChooseDevice");
         RulesSectionText.Text = App.State.T("SectionProtectionSettings");
         ScanSecondsTitleText.Text = App.State.T("LabelScanInterval");
         ScanSecondsHelpText.Text = App.State.T("HelpScanSeconds");

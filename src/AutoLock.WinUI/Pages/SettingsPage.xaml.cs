@@ -25,7 +25,7 @@ public sealed partial class SettingsPage : Page
             TrustedWifiBox.Text = FormatTrustedWifi(App.State.Settings.TrustedWifiSsids);
             LanguageBox.SelectedIndex = App.State.Language == "zh-CN" ? 0 : 1;
             ApplyText();
-            SetInfo(App.State.T("StatusReady"), App.State.T("StatusLoadedSettings"), InfoBarSeverity.Informational);
+            StatusInfoBar.IsOpen = false;
         }
         finally
         {
@@ -213,6 +213,9 @@ public sealed partial class SettingsPage : Page
     {
         PageTitleText.Text = App.State.T("NavSettings");
         PageSubtitleText.Text = App.State.T("PageSettingsSubtitle");
+        AppBehaviorSectionText.Text = App.State.T("SettingsSectionAppBehavior");
+        ExceptionsSectionText.Text = App.State.T("SettingsSectionExceptions");
+        AppearanceSectionText.Text = App.State.T("SettingsSectionAppearance");
         StartupTitleText.Text = App.State.T("CheckStartup");
         StartupHelpText.Text = App.State.T("HelpStartup");
         BackgroundTitleText.Text = App.State.T("CheckBackground");
